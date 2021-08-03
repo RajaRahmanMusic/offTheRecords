@@ -4,7 +4,7 @@ from offTheRecords import models
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Genre
-        fields = ['name']
+        fields = ['name', 'id']
 
 class InstagramSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,16 +22,17 @@ class ArtistSerializer(serializers.ModelSerializer):
                   'linkedin', 'tiktok', 'youtube', 'ascap',
                   'bmi', 'soundExchange', 'mlc', 'spotifyForArtists',
                   'songTrust', 'googleDrive', 'venmo', 'payPal',"manager",
-                  'cashapp', 'soundCloud', 'bandCamp', 'id']
+                  'cashapp', 'soundCloud', 'bandCamp', 'id',
+                  ]
 
 
 class ArtistWritableSerializer(serializers.ModelSerializer):
-
+# Add fks after wiring
     class Meta:
         model = models.Artist
         fields = ['artist_name', 'legal_name',
                   'email', 'phone_number', 'address',
                   'date_of_birth', 'website', 'ascap',
-                  'bmi', 'soundExchange', 'mlc',
+                  'bmi', 'soundExchange', 'mlc', 'primary_genre',
                   'songTrust', 'googleDrive', 'venmo', 'payPal',
-                  'cashapp', 'id']
+                  'cashapp', 'id', "instagram"]

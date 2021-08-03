@@ -19,9 +19,11 @@ def index(request):
                      User.CONTRACTOR: "contractor.html",
                      User.MANAGER: "manager.html"}
         manager = None
-        if request.user.role == User.ARTIST:
+        artist = None
+        if request.user.is_authenticated and request.user.role == User.ARTIST:
             try:
                 manager = models.Artist.objects.get(manager=request.user)
+                artist = manager
             except models.Artist.DoesNotExist:
                 pass
 
@@ -30,7 +32,7 @@ def index(request):
                 manager = request.user
 
         return render(request, "offTheRecords/" + templates[request.user.role],
-                      {'manager' : manager})
+                      {'manager' : manager, 'artist' : artist})
 
     # Everyone else is prompted to sign in
     else:
