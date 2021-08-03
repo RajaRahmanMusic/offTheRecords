@@ -8,5 +8,6 @@ router.register(r'genre', views.GenreViewSet)
 router.register(r'artist', views.ArtistViewSet)
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
+
 ]

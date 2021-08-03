@@ -31,7 +31,7 @@ class InstagramAdmin(admin.ModelAdmin):
 
 
 class FacebookAdmin(admin.ModelAdmin):
-    list_display = ['username', 'friends', 'verified']
+    list_display = ['username', 'followers', 'verified']
 
 
 class TwitterAdmin(admin.ModelAdmin):
@@ -39,7 +39,7 @@ class TwitterAdmin(admin.ModelAdmin):
 
 
 class LinkedinAdmin(admin.ModelAdmin):
-    list_display = ['username', 'connections']
+    list_display = ['username', 'followers']
 
 
 class TiktokAdmin(admin.ModelAdmin):
@@ -47,7 +47,7 @@ class TiktokAdmin(admin.ModelAdmin):
 
 
 class YoutubeAdmin(admin.ModelAdmin):
-    list_display = ['username', 'subscribers']
+    list_display = ['username', 'followers']
 
 
 class SoundCloudAdmin(admin.ModelAdmin):

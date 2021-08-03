@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import User
+from offTheRecords import models
 
 
 def index(request):
@@ -22,6 +23,13 @@ def index(request):
     # Everyone else is prompted to sign in
     else:
         return HttpResponseRedirect(reverse("login"))
+
+
+def artist_view(request, slug):
+
+    artist = models.Artist.objects.get(artist_name=slug)
+
+    return render(request, 'offTheRecords/artist.html', {'artist': artist})
 
 def login_view(request):
     if request.method == "POST":

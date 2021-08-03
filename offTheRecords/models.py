@@ -53,7 +53,7 @@ class Instagram(models.Model):
 
 class Facebook(models.Model):
     username = models.CharField(max_length=64)
-    friends = models.IntegerField(default=0)
+    followers = models.IntegerField(default=0)
     verified = models.IntegerField(default=0)
 
     def __str__(self):
@@ -71,7 +71,7 @@ class Twitter(models.Model):
 
 class LinkedIn (models.Model):
     username = models.CharField(max_length=64)
-    connections = models.IntegerField(default=0)
+    followers = models.IntegerField(default=0)
 
     def __str__(self):
         return self.username
@@ -88,7 +88,7 @@ class TikTok(models.Model):
 
 class YouTube(models.Model):
     username = models.CharField(max_length=64)
-    subscribers = models.IntegerField(default=0)
+    followers = models.IntegerField(default=0)
 
     def __str__(self):
         return self.username
@@ -127,7 +127,7 @@ class Artist(models.Model):
                                         related_name="secondary_genre")
     tertiary_genre = models.ForeignKey(Genre, on_delete=models.PROTECT, blank=True, null=True,
                                        related_name="tertiary_genre")
-    artist_name = models.CharField(max_length=64)
+    artist_name = models.CharField(max_length=64, unique=True)
     legal_name = models.CharField(max_length=64)
     email = models.CharField(max_length=64)
     phone_number = models.CharField(max_length=64)
