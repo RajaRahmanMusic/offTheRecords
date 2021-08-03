@@ -1,5 +1,7 @@
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -42,570 +44,697 @@ var EditForm = function (_React$Component) {
             venmo: props.artist.venmo,
             payPal: props.artist.payPal,
             cashapp: props.artist.cashapp,
-            edit: {}
-        };
+            id: props.artist.id,
+            manager: props.artist.manager,
+            edit: "" };
 
         return _this;
     }
 
     _createClass(EditForm, [{
-        key: "displayForeign",
-        value: function displayForeign(name) {
-            var _this2 = this;
+        key: 'editForeign',
+        value: function editForeign(e, name) {
+            e.preventDefault();
+            console.log(this.state[name]);
+            this.setState({ edit: name });
+        }
+    }, {
+        key: 'editForeignHelper',
+        value: function editForeignHelper(e, name, key) {
+            console.log(e);
 
-            if (this.state.edit[name]) {
-                return React.createElement(
-                    "td",
-                    null,
-                    React.createElement(
-                        "div",
-                        { className: "col" },
-                        React.createElement("input", { className: "form-control",
-                            onChange: function onChange(e) {
-                                return _this2.setState({ instagram: e.target.value });
-                            },
-                            value: this.state.instagram })
-                    ),
-                    React.createElement(
-                        "div",
-                        { clasName: "col" },
-                        React.createElement(
-                            "label",
-                            null,
-                            "Followers:"
-                        )
-                    )
-                );
+            var dup = Object.assign({}, this.state[name]);
+            if (key != 'verified') {
+                dup[key] = e.target.value;
+                this.setState(_defineProperty({}, name, dup));
+            } else {
+                dup[key] = e.target.checked;
+                this.setState(_defineProperty({}, name, dup));
             }
         }
     }, {
-        key: "formSubmit",
-        value: function formSubmit(e) {
-            e.preventDefault();
-            console.log("Form submit");
+        key: 'saveForeign',
+        value: function saveForeign(e, name) {
+            var _this2 = this;
+
+            console.log(e);
+            var obj = this.state[name];
+
+            fetch('/api/' + name + '/' + obj.id + '/', { method: 'PUT',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify(obj)
+            }).then(function (resp) {
+                return resp.json();
+            }).then(function (json) {
+                return _this2.setState({ edit: "" });
+            });
         }
     }, {
-        key: "render",
-        value: function render() {
+        key: 'displayForeign',
+        value: function displayForeign(name) {
             var _this3 = this;
 
-            return React.createElement(
-                "form",
-                { onSubmit: function onSubmit(e) {
-                        return _this3.formSubmit(e);
-                    } },
-                React.createElement(
-                    "table",
+            if (this.state.edit == name) {
+                return React.createElement(
+                    'td',
                     null,
                     React.createElement(
-                        "tbody",
+                        'div',
+                        { className: 'row' },
+                        Object.keys(this.state[name]).map(function (key) {
+                            if (key != "id") {
+                                return React.createElement(
+                                    React.Fragment,
+                                    { key: key },
+                                    React.createElement(
+                                        'div',
+                                        { className: "col-xs-1" },
+                                        React.createElement(
+                                            'label',
+                                            null,
+                                            key
+                                        )
+                                    ),
+                                    React.createElement(
+                                        'div',
+                                        { className: "col-xs-1" },
+                                        key != "verified" ? React.createElement('input', { className: 'form-control',
+                                            onChange: function onChange(e) {
+                                                return _this3.editForeignHelper(e, name, key);
+                                            },
+                                            value: _this3.state[name][key] }) : React.createElement('input', { type: "checkbox",
+                                            onChange: function onChange(e) {
+                                                return _this3.editForeignHelper(e, name, key);
+                                            },
+                                            checked: _this3.state[name].verified })
+                                    )
+                                );
+                            }
+                        }),
+                        React.createElement(
+                            'div',
+                            { className: "col-xs-1" },
+                            React.createElement(
+                                'button',
+                                { onClick: function onClick(e) {
+                                        return _this3.saveForeign(e, name);
+                                    },
+                                    className: 'btn btn-dark' },
+                                'Save'
+                            )
+                        )
+                    )
+                );
+            } else if (this.state[name]) {
+                return React.createElement(
+                    'td',
+                    null,
+                    React.createElement(
+                        'div',
+                        { className: 'row' },
+                        Object.keys(this.state[name]).map(function (key) {
+                            if (key != "id") {
+                                return React.createElement(
+                                    React.Fragment,
+                                    { key: key },
+                                    React.createElement(
+                                        'div',
+                                        { className: "col-xs-1" },
+                                        key
+                                    ),
+                                    React.createElement(
+                                        'div',
+                                        { className: "col-xs-1" },
+                                        key == "verified" ? _this3.state[name].verified == true ? "True" : "False" : _this3.state[name][key]
+                                    )
+                                );
+                            }
+                        }),
+                        React.createElement(
+                            'div',
+                            { className: "col-xs-1" },
+                            React.createElement(
+                                'button',
+                                { onClick: function onClick(e) {
+                                        return _this3.editForeign(e, name);
+                                    },
+                                    className: 'btn btn-dark' },
+                                'Edit'
+                            )
+                        )
+                    )
+                );
+            } else {
+                return "";
+            }
+        }
+    }, {
+        key: 'formSubmit',
+        value: function formSubmit(e) {
+            e.preventDefault();
+            console.log(e);
+            var link = "/api/artist/";
+            var method = "POST";
+            if (this.state.id) {
+                method = "PUT";
+                link += this.state.id + '/';
+            }
+
+            fetch(link, { method: method,
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify(this.state)
+            }).then(function (resp) {
+                return resp.json();
+            }).then(function (json) {
+                return console.log(json);
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this4 = this;
+
+            return React.createElement(
+                'form',
+                { onSubmit: function onSubmit(e) {
+                        return _this4.formSubmit(e);
+                    } },
+                React.createElement(
+                    'table',
+                    { className: "table" },
+                    React.createElement(
+                        'tbody',
                         null,
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Artist Name"
+                                'Artist Name'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ artist_name: e.target.value });
+                                        return _this4.setState({ artist_name: e.target.value });
                                     },
                                     value: this.state.artist_name })
                             )
                         ),
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Legal Name"
+                                'Legal Name'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ legal_name: e.target.value });
+                                        return _this4.setState({ legal_name: e.target.value });
                                     },
                                     value: this.state.legal_name })
                             )
                         ),
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Email"
+                                'Email'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ email: e.target.value });
+                                        return _this4.setState({ email: e.target.value });
                                     },
                                     value: this.state.email })
                             )
                         ),
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Phone Number"
+                                'Phone Number'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ phone_number: e.target.value });
+                                        return _this4.setState({ phone_number: e.target.value });
                                     },
                                     value: this.state.phone_number })
                             )
                         ),
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Address"
+                                'Address'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ address: e.target.value });
+                                        return _this4.setState({ address: e.target.value });
                                     },
                                     value: this.state.address })
                             )
                         ),
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Date of Birth"
+                                'Date of Birth'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ date_of_birth: e.target.value });
+                                        return _this4.setState({ date_of_birth: e.target.value });
                                     },
                                     value: this.state.date_of_birth })
                             )
                         ),
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Primary Genre"
+                                'Primary Genre'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ primary_genre: e.target.value });
+                                        return _this4.setState({ primary_genre: e.target.value });
                                     },
                                     value: this.state.primary_genre })
                             )
                         ),
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Secondary Genre"
+                                'Secondary Genre'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ secondary_genre: e.target.value });
+                                        return _this4.setState({ secondary_genre: e.target.value });
                                     },
                                     value: this.state.secondary_genre })
                             )
                         ),
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Tertiary Genre"
+                                'Tertiary Genre'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ tertiary_genre: e.target.value });
+                                        return _this4.setState({ tertiary_genre: e.target.value });
                                     },
                                     value: this.state.tertiary_genre })
                             )
                         ),
                         React.createElement(
-                            "tr",
+                            'tr',
                             null,
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                "Website"
+                                'Website'
                             ),
                             React.createElement(
-                                "td",
+                                'td',
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement('input', { className: 'form-control',
                                     onChange: function onChange(e) {
-                                        return _this3.setState({ website: e.target.value });
+                                        return _this4.setState({ website: e.target.value });
                                     },
                                     value: this.state.website })
                             )
                         ),
-                        React.createElement(
-                            "tr",
+                        this.props.artist && React.createElement(
+                            React.Fragment,
                             null,
                             React.createElement(
-                                "td",
+                                'tr',
                                 null,
-                                "Instagram"
-                            ),
-                            this.displayForeign('instagram')
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "Facebook"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ facebook: e.target.value });
-                                    },
-                                    value: this.state.facebook })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "Twitter"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ twitter: e.target.value });
-                                    },
-                                    value: this.state.twitter })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "LinkedIn"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ linkedin: e.target.value });
-                                    },
-                                    value: this.state.linkedin })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "TikTok"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ tiktok: e.target.value });
-                                    },
-                                    value: this.state.tiktok })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "YouTube"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ youtube: e.target.value });
-                                    },
-                                    value: this.state.youtube })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "SoundCloud"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ soundCloud: e.target.value });
-                                    },
-                                    value: this.state.soundCloud })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "Bandcamp"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ bandCamp: e.target.value });
-                                    },
-                                    value: this.state.bandCamp })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "Spotify For Artists"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ spotifyForArtists: e.target.value });
-                                    },
-                                    value: this.state.spotifyForArtists })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "ASCAP"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ ascap: e.target.value });
-                                    },
-                                    value: this.state.ascap })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "BMI"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ bmi: e.target.value });
-                                    },
-                                    value: this.state.bmi })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "SoundExchange"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ soundExchange: e.target.value });
-                                    },
-                                    value: this.state.soundExchange })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "MLC"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ mlc: e.target.value });
-                                    },
-                                    value: this.state.mlc })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "Songtrust"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ songTrust: e.target.value });
-                                    },
-                                    value: this.state.songTrust })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "Google Drive"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ googleDrive: e.target.value });
-                                    },
-                                    value: this.state.googleDrive })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "Venmo"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ venmo: e.target.value });
-                                    },
-                                    value: this.state.venmo })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "PayPal"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ payPal: e.target.value });
-                                    },
-                                    value: this.state.payPal })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                null,
-                                "Cash App"
-                            ),
-                            React.createElement(
-                                "td",
-                                null,
-                                React.createElement("input", { className: "form-control",
-                                    onChange: function onChange(e) {
-                                        return _this3.setState({ cashapp: e.target.value });
-                                    },
-                                    value: this.state.cashapp })
-                            )
-                        ),
-                        React.createElement(
-                            "tr",
-                            null,
-                            React.createElement(
-                                "td",
-                                { colSpan: "2" },
                                 React.createElement(
-                                    "button",
-                                    { className: "btn btn-primary" },
-                                    "Update"
+                                    'td',
+                                    null,
+                                    'Instagram'
+                                ),
+                                this.displayForeign('instagram')
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'Facebook'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ facebook: e.target.value });
+                                        },
+                                        value: this.state.facebook })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'Twitter'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ twitter: e.target.value });
+                                        },
+                                        value: this.state.twitter })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'LinkedIn'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ linkedin: e.target.value });
+                                        },
+                                        value: this.state.linkedin })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'TikTok'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ tiktok: e.target.value });
+                                        },
+                                        value: this.state.tiktok })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'YouTube'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ youtube: e.target.value });
+                                        },
+                                        value: this.state.youtube })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'SoundCloud'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ soundCloud: e.target.value });
+                                        },
+                                        value: this.state.soundCloud })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'Bandcamp'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ bandCamp: e.target.value });
+                                        },
+                                        value: this.state.bandCamp })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'Spotify For Artists'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ spotifyForArtists: e.target.value });
+                                        },
+                                        value: this.state.spotifyForArtists })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'ASCAP'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ ascap: e.target.value });
+                                        },
+                                        value: this.state.ascap })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'BMI'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ bmi: e.target.value });
+                                        },
+                                        value: this.state.bmi })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'SoundExchange'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ soundExchange: e.target.value });
+                                        },
+                                        value: this.state.soundExchange })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'MLC'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ mlc: e.target.value });
+                                        },
+                                        value: this.state.mlc })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'Songtrust'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ songTrust: e.target.value });
+                                        },
+                                        value: this.state.songTrust })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'Google Drive'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ googleDrive: e.target.value });
+                                        },
+                                        value: this.state.googleDrive })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'Venmo'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ venmo: e.target.value });
+                                        },
+                                        value: this.state.venmo })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'PayPal'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ payPal: e.target.value });
+                                        },
+                                        value: this.state.payPal })
+                                )
+                            ),
+                            React.createElement(
+                                'tr',
+                                null,
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    'Cash App'
+                                ),
+                                React.createElement(
+                                    'td',
+                                    null,
+                                    React.createElement('input', { className: 'form-control',
+                                        onChange: function onChange(e) {
+                                            return _this4.setState({ cashapp: e.target.value });
+                                        },
+                                        value: this.state.cashapp })
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'tr',
+                            null,
+                            React.createElement(
+                                'td',
+                                { colSpan: '2' },
+                                React.createElement(
+                                    'button',
+                                    { className: 'btn btn-primary' },
+                                    'Update'
                                 )
                             )
                         )
@@ -624,32 +753,36 @@ var Artist = function (_React$Component2) {
     function Artist(props) {
         _classCallCheck(this, Artist);
 
-        var _this4 = _possibleConstructorReturn(this, (Artist.__proto__ || Object.getPrototypeOf(Artist)).call(this, props));
+        var _this5 = _possibleConstructorReturn(this, (Artist.__proto__ || Object.getPrototypeOf(Artist)).call(this, props));
 
-        _this4.state = { 'id': document.getElementById('artist_id').value };
+        _this5.state = { 'id': document.getElementById('artist_id').value,
+            'manger_id': document.getElementById('manager_id').value
+        };
 
-        return _this4;
+        return _this5;
     }
 
     _createClass(Artist, [{
-        key: "componentDidMount",
+        key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this5 = this;
+            var _this6 = this;
 
-            fetch("/api/artist/" + this.state.id).then(function (resp) {
-                return resp.json();
-            }).then(function (json) {
-                _this5.setState({ artist: json });
-                console.log(json);
-            });
+            if (this.state.id) {
+                var link = "/api/artist/" + this.state.id;
+
+                fetch(link).then(function (resp) {
+                    return resp.json();
+                }).then(function (json) {
+                    _this6.setState({ artist: json });
+                    console.log(json);
+                });
+            }
         }
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
-            if (this.state.artist) {
-                return React.createElement(EditForm, { artist: this.state.artist });
-            }
-            return "Loading...";
+
+            return React.createElement(EditForm, { artist: this.state.artist });
         }
     }]);
 
@@ -659,4 +792,4 @@ var Artist = function (_React$Component2) {
 var elem = document.getElementById("root");
 ReactDOM.render(React.createElement(Artist, null), elem);
 
-console.log("0.10");
+console.log("0.18");

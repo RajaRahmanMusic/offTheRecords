@@ -1,6 +1,7 @@
 {% extends "offTheRecords/layout.html" %}
 {% block script %}
         <input type="hidden" name="artist_id" value="{{ artist.id }}" id="artist_id" />
+        <input type="hidden" name="manager_id" value="{{ manager.id }}" id="manager_id" />
      <!-- Load our React component. -->
         <script src="/static/artist.js"></script>
 

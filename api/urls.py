@@ -6,6 +6,7 @@ router = routers.DefaultRouter()
 
 router.register(r'genre', views.GenreViewSet)
 router.register(r'artist', views.ArtistViewSet)
+router.register(r'instagram', views.InstagramViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

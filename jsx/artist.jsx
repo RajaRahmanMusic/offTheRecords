@@ -31,34 +31,126 @@ class EditForm extends React.Component {
             venmo: props.artist.venmo,
             payPal: props.artist.payPal,
             cashapp: props.artist.cashapp,
-            edit: {}
-        }
-
+            id: props.artist.id,
+            manager: props.artist.manager,
+            edit: ""}
 
 
     }
+    editForeign(e, name) {
+        e.preventDefault();
+        console.log(this.state[name])
+        this.setState({edit : name})
+    }
+
+    editForeignHelper(e, name, key) {
+        console.log(e)
+
+        const dup = {... this.state[name]}
+        if(key != 'verified') {
+            dup[key] = e.target.value
+            this.setState({[name]: dup})
+        }
+        else {
+            dup[key] = e.target.checked
+            this.setState({[name]: dup})
+        }
+    }
+
+    saveForeign(e,name) {
+        console.log(e)
+        const obj = this.state[name]
+
+        fetch(`/api/${name}/${obj.id}/`,
+            {method: 'PUT',
+             headers: { 'Content-type': 'application/json'},
+             body: JSON.stringify(obj)
+        }
+        ).then(resp => resp.json()
+        ).then(json => this.setState({edit: ""}))
+    }
 
     displayForeign(name){
-        if(this.state.edit[name]) {
+        if(this.state.edit == name) {
             return (<td>
-                <div className='col'>
-                <input className="form-control"
-                                       onChange={ e => this.setState({instagram : e.target.value})}
-                                       value={this.state.instagram} />
+                <div className='row'>
+                    {
+                        Object.keys(this.state[name]).map(key => {
+                            if(key != "id") {
+                                return (<React.Fragment key={key}>
+                                    <div className={"col-xs-1"}><label>{key}</label></div>
+                                    <div className={"col-xs-1"}>
+                                        {key != "verified" ?
+                                            (<input className="form-control"
+                                                    onChange={e => this.editForeignHelper(e, name, key)}
+                                                    value={this.state[name][key]}/>)
+                                            : (<input type={"checkbox"}
+                                                      onChange={e => this.editForeignHelper(e, name, key)}
+                                                      checked = { this.state[name].verified}  />
+                                            )
+                                        }
+                                    </div>
+                                </React.Fragment>)
+                            }
+                        })
+                    }
+                    <div className={"col-xs-1"}>
+                    <button onClick={ e => this.saveForeign(e, name) }
+                            className="btn btn-dark">Save</button>
                 </div>
-                <div clasName="col"><label>Followers:</label></div>
-            </td>)
+            </div></td>)
+        }
+        else if (this.state[name]) {
+            return(<td><div className={'row'}>
+                {
+
+                    Object.keys(this.state[name]).map( key => {
+                        if(key != "id") {
+                            return (
+                                <React.Fragment key={key}>
+                                    <div className={"col-xs-1"}>{ key }</div>
+                                <div className={"col-xs-1"}>
+                                    {  key == "verified"  ? (this.state[name].verified == true ? "True" : "False")
+                                        : this.state[name][key]}
+                                </div>
+                               </React.Fragment> )
+                        }
+                    })
+                }
+
+                <div className={"col-xs-1"}>
+                    <button onClick={ e => this.editForeign(e, name) }
+                            className="btn btn-dark">Edit</button>
+                </div>
+            </div></td>)
+        }
+        else {
+            return ""
         }
     }
 
     formSubmit(e) {
-        e.preventDefault();
-        console.log("Form submit")
+        e.preventDefault()
+        console.log(e)
+        var link = "/api/artist/"
+        var method = "POST"
+        if(this.state.id) {
+            method = "PUT"
+            link += this.state.id + '/'
+        }
+
+        fetch(link,
+            {method: method,
+             headers: { 'Content-type': 'application/json'},
+             body: JSON.stringify(this.state)
+        }
+        ).then(resp => resp.json()
+        ).then(json => console.log(json))
     }
     render() {
         return(
             <form onSubmit={e => this.formSubmit(e)}>
-                <table>
+                <table className={"table"}>
                     <tbody>
                         <tr><td>Artist Name</td>
                             <td>
@@ -130,129 +222,133 @@ class EditForm extends React.Component {
                                        value={this.state.website} />
                             </td>
                         </tr>
-                        <tr><td>Instagram</td>
-                            { this.displayForeign('instagram') }
+                        { this.props.artist && (
+                            <React.Fragment>
+                            <tr><td>Instagram</td>
+                                { this.displayForeign('instagram') }
 
-                        </tr>
-                        <tr><td>Facebook</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({facebook : e.target.value})}
-                                       value={this.state.facebook} />
-                            </td>
-                        </tr>
-                        <tr><td>Twitter</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({twitter : e.target.value})}
-                                       value={this.state.twitter} />
-                            </td>
-                        </tr>
-                        <tr><td>LinkedIn</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({linkedin : e.target.value})}
-                                       value={this.state.linkedin} />
-                            </td>
-                        </tr>
-                        <tr><td>TikTok</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({tiktok : e.target.value})}
-                                       value={this.state.tiktok} />
-                            </td>
-                        </tr>
-                        <tr><td>YouTube</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({youtube : e.target.value})}
-                                       value={this.state.youtube} />
-                            </td>
-                        </tr>
-                        <tr><td>SoundCloud</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({soundCloud : e.target.value})}
-                                       value={this.state.soundCloud} />
-                            </td>
-                        </tr>
-                        <tr><td>Bandcamp</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({bandCamp : e.target.value})}
-                                       value={this.state.bandCamp} />
-                            </td>
-                        </tr>
-                        <tr><td>Spotify For Artists</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({spotifyForArtists : e.target.value})}
-                                       value={this.state.spotifyForArtists} />
-                            </td>
-                        </tr>
-                        <tr><td>ASCAP</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({ascap : e.target.value})}
-                                       value={this.state.ascap} />
-                            </td>
-                        </tr>
-                        <tr><td>BMI</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({bmi : e.target.value})}
-                                       value={this.state.bmi} />
-                            </td>
-                        </tr>
-                        <tr><td>SoundExchange</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({soundExchange : e.target.value})}
-                                       value={this.state.soundExchange} />
-                            </td>
-                        </tr>
-                        <tr><td>MLC</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({mlc : e.target.value})}
-                                       value={this.state.mlc} />
-                            </td>
-                        </tr>
-                        <tr><td>Songtrust</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({songTrust : e.target.value})}
-                                       value={this.state.songTrust} />
-                            </td>
-                        </tr>
-                        <tr><td>Google Drive</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({googleDrive : e.target.value})}
-                                       value={this.state.googleDrive} />
-                            </td>
-                        </tr>
-                        <tr><td>Venmo</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({venmo : e.target.value})}
-                                       value={this.state.venmo} />
-                            </td>
-                        </tr>
-                        <tr><td>PayPal</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({payPal : e.target.value})}
-                                       value={this.state.payPal} />
-                            </td>
-                        </tr>
-                        <tr><td>Cash App</td>
-                            <td>
-                                <input className="form-control"
-                                       onChange={ e => this.setState({cashapp : e.target.value})}
-                                       value={this.state.cashapp} />
-                            </td>
-                        </tr>
+                            </tr>
+                            <tr><td>Facebook</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({facebook : e.target.value})}
+                                           value={this.state.facebook} />
+                                </td>
+                            </tr>
+                            <tr><td>Twitter</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({twitter : e.target.value})}
+                                           value={this.state.twitter} />
+                                </td>
+                            </tr>
+                            <tr><td>LinkedIn</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({linkedin : e.target.value})}
+                                           value={this.state.linkedin} />
+                                </td>
+                            </tr>
+                            <tr><td>TikTok</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({tiktok : e.target.value})}
+                                           value={this.state.tiktok} />
+                                </td>
+                            </tr>
+                            <tr><td>YouTube</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({youtube : e.target.value})}
+                                           value={this.state.youtube} />
+                                </td>
+                            </tr>
+                            <tr><td>SoundCloud</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({soundCloud : e.target.value})}
+                                           value={this.state.soundCloud} />
+                                </td>
+                            </tr>
+                            <tr><td>Bandcamp</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({bandCamp : e.target.value})}
+                                           value={this.state.bandCamp} />
+                                </td>
+                            </tr>
+                            <tr><td>Spotify For Artists</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({spotifyForArtists : e.target.value})}
+                                           value={this.state.spotifyForArtists} />
+                                </td>
+                            </tr>
+                            <tr><td>ASCAP</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({ascap : e.target.value})}
+                                           value={this.state.ascap} />
+                                </td>
+                            </tr>
+                            <tr><td>BMI</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({bmi : e.target.value})}
+                                           value={this.state.bmi} />
+                                </td>
+                            </tr>
+                            <tr><td>SoundExchange</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({soundExchange : e.target.value})}
+                                           value={this.state.soundExchange} />
+                                </td>
+                            </tr>
+                            <tr><td>MLC</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({mlc : e.target.value})}
+                                           value={this.state.mlc} />
+                                </td>
+                            </tr>
+                            <tr><td>Songtrust</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({songTrust : e.target.value})}
+                                           value={this.state.songTrust} />
+                                </td>
+                            </tr>
+                            <tr><td>Google Drive</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({googleDrive : e.target.value})}
+                                           value={this.state.googleDrive} />
+                                </td>
+                            </tr>
+                            <tr><td>Venmo</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({venmo : e.target.value})}
+                                           value={this.state.venmo} />
+                                </td>
+                            </tr>
+                            <tr><td>PayPal</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({payPal : e.target.value})}
+                                           value={this.state.payPal} />
+                                </td>
+                            </tr>
+                            <tr><td>Cash App</td>
+                                <td>
+                                    <input className="form-control"
+                                           onChange={ e => this.setState({cashapp : e.target.value})}
+                                           value={this.state.cashapp} />
+                                </td>
+                            </tr>
+                                </React.Fragment>
+                            )}
                         <tr><td colSpan="2"><button className="btn btn-primary">Update</button></td></tr>
                     </tbody>
                 </table>
@@ -264,22 +360,27 @@ class EditForm extends React.Component {
 class Artist extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {'id' :  document.getElementById('artist_id').value}
+        this.state = {'id' :  document.getElementById('artist_id').value,
+            'manger_id' : document.getElementById('manager_id').value
+        }
 
     }
 
     componentDidMount() {
-        fetch(`/api/artist/${this.state.id}`).then(resp => resp.json()
-        ).then(json => {
-            this.setState({artist: json});
-            console.log(json)
-        })
+        if(this.state.id) {
+            const link = "/api/artist/" + this.state.id
+
+            fetch(link).then(resp => resp.json()
+            ).then(json => {
+                this.setState({artist: json});
+                console.log(json)
+            })
+        }
     }
     render() {
-        if(this.state.artist) {
-            return (<EditForm artist={this.state.artist}/>)
-        }
-        return "Loading..."
+
+       return (<EditForm artist={this.state.artist}/>)
+
     }
 }
 
@@ -289,4 +390,4 @@ ReactDOM.render(
 )
 
 
-console.log("0.10")
+console.log("0.18")

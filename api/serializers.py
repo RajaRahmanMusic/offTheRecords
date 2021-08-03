@@ -21,5 +21,17 @@ class ArtistSerializer(serializers.ModelSerializer):
                   'date_of_birth', 'primary_genre', 'secondary_genre', 'tertiary_genre', 'website', 'instagram', 'facebook',
                   'linkedin', 'tiktok', 'youtube', 'ascap',
                   'bmi', 'soundExchange', 'mlc', 'spotifyForArtists',
-                  'songTrust', 'googleDrive', 'venmo', 'payPal',
+                  'songTrust', 'googleDrive', 'venmo', 'payPal',"manager",
                   'cashapp', 'soundCloud', 'bandCamp', 'id']
+
+
+class ArtistWritableSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Artist
+        fields = ['artist_name', 'legal_name',
+                  'email', 'phone_number', 'address',
+                  'date_of_birth', 'website', 'ascap',
+                  'bmi', 'soundExchange', 'mlc',
+                  'songTrust', 'googleDrive', 'venmo', 'payPal',
+                  'cashapp', 'id']

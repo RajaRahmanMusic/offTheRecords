@@ -45,7 +45,7 @@ class Contractor_info(models.Model):
 class Instagram(models.Model):
     username = models.CharField(max_length=64)
     followers = models.IntegerField(default=0)
-    verified = models.IntegerField(default=0)
+    verified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -54,8 +54,7 @@ class Instagram(models.Model):
 class Facebook(models.Model):
     username = models.CharField(max_length=64)
     followers = models.IntegerField(default=0)
-    verified = models.IntegerField(default=0)
-
+    verified = models.BooleanField(default=False)
     def __str__(self):
         return self.username
 
@@ -63,8 +62,7 @@ class Facebook(models.Model):
 class Twitter(models.Model):
     username = models.CharField(max_length=64)
     followers = models.IntegerField(default=0)
-    verified = models.IntegerField(default=0)
-
+    verified = models.BooleanField(default=False)
     def __str__(self):
         return self.username
 
@@ -80,8 +78,7 @@ class LinkedIn (models.Model):
 class TikTok(models.Model):
     username = models.CharField(max_length=64)
     followers = models.IntegerField(default=0)
-    verified = models.IntegerField(default=0)
-
+    verified = models.BooleanField(default=False)
     def __str__(self):
         return self.username
 
