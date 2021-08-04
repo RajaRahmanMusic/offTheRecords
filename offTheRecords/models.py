@@ -154,16 +154,29 @@ class Artist(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=128, unique=True)
+    duration = models.IntegerField(null=True, blank=True)
+    song_per_duration = models.IntegerField(default=1)
+    depends_on = models.ForeignKey('Item', on_delete=models.PROTECT,
+                                   null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Project(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.PROTECT)
     name = models.CharField(max_length=128)
     started_on = models.DateField()
+    num_songs = models.IntegerField(default=1)
+    num_od = models.IntegerField(default=1)
+    task = models.ManyToManyField(to=Item, through ='ProjectItem')
+
+    def __str__(self):
+        return self.name
+
 
 class ProjectItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.PROTECT)
-    duration = models.IntegerField()
-    depends_on = models.ForeignKey('ProjectItem', on_delete=models.PROTECT,
-                                   null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
 
 

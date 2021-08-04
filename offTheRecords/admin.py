@@ -62,11 +62,14 @@ class SpotifyForArtistsAdmin(admin.ModelAdmin):
     list_display = ['username', 'followers', 'monthly_listeners']
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display =  ['name']
+    list_display = ['name', 'depends_on', 'duration', 'song_per_duration']
 
 class ProjectAdmin(admin.ModelAdmin):
-    #list_display = ['name','artist','started_on']
-    pass
+    list_display = ['name','artist','started_on', 'num_songs', 'num_od']
+
+class ProjectItemAdmin(admin.ModelAdmin):
+    list_display = ['item', 'project']
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Artist, ArtistAdmin)
 admin.site.register(models.Contractor_info, Contractor_infoAdmin)
@@ -81,3 +84,7 @@ admin.site.register(models.YouTube, YoutubeAdmin)
 admin.site.register(models.SoundCloud, SoundCloudAdmin)
 admin.site.register(models.BandCamp, BandCampAdmin)
 admin.site.register(models.SpotifyForArtists, SpotifyForArtistsAdmin)
+
+admin.site.register(models.Item, ItemAdmin)
+admin.site.register(models.Project, ProjectAdmin)
+admin.site.register(models.ProjectItem, ProjectItemAdmin)

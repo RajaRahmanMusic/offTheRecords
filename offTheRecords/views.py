@@ -53,6 +53,27 @@ def artist_view(request, slug=None):
     return render(request, 'offTheRecords/artist.html', {'artist': artist})
 
 
+def project_planning_results_view(request, slug1, slug2):
+    if slug1 and slug2:
+        qs1 = models.Artist.objects.filter(manager=request.user)
+        qs2 = models.Project.objects.filter(artist__us)
+
+        try:
+            artist = qs1.get(artist_name=slug1)
+        except models.Artist.DoesNotExist:
+            return redirect(reverse("index"))
+
+        try:
+            project = qs2.get(name=slug2)
+        except models.Artist.DoesNotExist:
+            return redirect(reverse("index"))
+
+    else:
+        return redirect(reverse("index"))
+
+    return render(request, 'offTheRecords/project_planning_results.html', {'artist': artist, 'project': project})
+
+
 def login_view(request):
     if request.method == "POST":
         # Attempt to sign user in
