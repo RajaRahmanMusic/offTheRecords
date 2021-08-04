@@ -3,14 +3,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import JsonResponse
-from django.shortcuts import HttpResponse, HttpResponseRedirect, render
+from django.shortcuts import HttpResponse, HttpResponseRedirect, render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import User
 from offTheRecords import models
 
-
+@login_required
 def index(request):
 
     # Authenticated users view their inbox
@@ -38,12 +38,20 @@ def index(request):
     else:
         return HttpResponseRedirect(reverse("login"))
 
+@login_required
+def artist_view(request, slug=None):
+    if slug:
+        qs = models.Artist.objects.filter(manager=request.user)
 
-def artist_view(request, slug):
+        try:
+            artist = qs.get(artist_name=slug)
+        except models.Artist.DoesNotExist:
+            return redirect(reverse("index"))
 
-    artist = models.Artist.objects.get(artist_name=slug)
-
+    else:
+        artist = None
     return render(request, 'offTheRecords/artist.html', {'artist': artist})
+
 
 def login_view(request):
     if request.method == "POST":

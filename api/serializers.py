@@ -11,28 +11,94 @@ class InstagramSerializer(serializers.ModelSerializer):
         model = models.Instagram
         fields = '__all__'
 
+
+class FacebookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Facebook
+        fields = '__all__'
+
+
+class TwitterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Twitter
+        fields = '__all__'
+
+
+class LinkedInSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.LinkedIn
+        fields = '__all__'
+
+
+class TikTokSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.TikTok
+        fields = '__all__'
+
+
+class YouTubeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.YouTube
+        fields = '__all__'
+
+
+class SoundCloudSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SoundCloud
+        fields = '__all__'
+
+
+class BandCampSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BandCamp
+        fields = '__all__'
+
+
+class SpotifyForArtistsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SpotifyForArtists
+        fields = '__all__'
+
+
 class ArtistSerializer(serializers.ModelSerializer):
     instagram = InstagramSerializer()
+    facebook = FacebookSerializer()
+    spotifyForArtists = SpotifyForArtistsSerializer()
+    twitter = TwitterSerializer()
+    linkedin = LinkedInSerializer()
+    tiktok = TikTokSerializer()
+    youtube = YouTubeSerializer()
+    soundCloud = SoundCloudSerializer()
+    bandCamp = BandCampSerializer()
+    primary_genre = GenreSerializer(required=False)
+    secondary_genre = GenreSerializer()
+    tertiary_genre = GenreSerializer()
 
     class Meta:
         model = models.Artist
         fields = ['artist_name', 'legal_name',
                   'email', 'phone_number', 'address',
-                  'date_of_birth', 'primary_genre', 'secondary_genre', 'tertiary_genre', 'website', 'instagram', 'facebook',
-                  'linkedin', 'tiktok', 'youtube', 'ascap',
+                  'date_of_birth',
+                  'primary_genre', 'secondary_genre', 'tertiary_genre',
+                  'website', 'instagram', 'facebook',
+                  'linkedin', 'twitter', 'tiktok', 'youtube', 'ascap',
                   'bmi', 'soundExchange', 'mlc', 'spotifyForArtists',
-                  'songTrust', 'googleDrive', 'venmo', 'payPal',"manager",
+                  'songTrust', 'googleDrive', 'venmo', 'payPal',
+                  "manager",
                   'cashapp', 'soundCloud', 'bandCamp', 'id',
                   ]
 
 
 class ArtistWritableSerializer(serializers.ModelSerializer):
-# Add fks after wiring
+
     class Meta:
         model = models.Artist
         fields = ['artist_name', 'legal_name',
                   'email', 'phone_number', 'address',
-                  'date_of_birth', 'website', 'ascap',
-                  'bmi', 'soundExchange', 'mlc', 'primary_genre',
+                  'date_of_birth',
+                  'primary_genre', 'secondary_genre', 'tertiary_genre',
+                  'website', 'instagram', 'facebook',
+                  'linkedin', 'twitter', 'tiktok', 'youtube', 'ascap',
+                  'bmi', 'soundExchange', 'mlc', 'spotifyForArtists',
                   'songTrust', 'googleDrive', 'venmo', 'payPal',
-                  'cashapp', 'id', "instagram"]
+                  'cashapp', 'soundCloud', 'bandCamp', 'id',]

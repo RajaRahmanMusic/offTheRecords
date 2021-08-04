@@ -1,11 +1,314 @@
+{/* TODO ADD ANCHOR FOR FOREIGN KEY 3rd PARTY WEBSITES */}
+{/* TODO MAKE DATE FIELD MORE USER FRIENDLY */}
+
+
+
+class ArtistView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { edit: ""}
+    }
+
+    displayForeign(name, title){
+        console.log(name, title)
+        if (this.props.artist[name]) {
+            return(
+                <tr><td>{title}</td>
+
+                <td><div className={'row'}>
+                {
+
+                    Object.keys(this.props.artist[name]).map( key => {
+                        if(key != "id") {
+                            return (
+                                <React.Fragment key={key}>
+                                    <div className={"col-sm-2"}>{ key }</div>
+                                <div className={"col-sm-2"}>
+                                    {  key == "verified"  ? (this.props.artist[name].verified == true ? "True" : "False")
+                                        : this.props.artist[name][key]}
+                                </div>
+                               </React.Fragment> )
+                        }
+                    })
+                }
+
+                </div></td>
+                </tr>
+                )
+        }
+    }
+
+    secondaryItems() {
+        if(  this.props.create === false) {
+            return (
+                            <React.Fragment>
+
+                                { this.displayForeign('instagram', 'Instagram') }
+
+
+                                { this.displayForeign('facebook', 'Facebook') }
+
+                                { this.displayForeign('twitter', 'Twitter') }
+
+                                { this.displayForeign('linkedIn', 'LinkedIn') }
+
+                                { this.displayForeign('tikTok', 'TikTok') }
+
+                                { this.displayForeign('youTube', 'YouTube' ) }
+
+                                { this.displayForeign('soundCloud', 'SoundCloud') }
+
+                                { this.displayForeign('bandCamp', 'Bandcamp') }
+
+                                { this.displayForeign('spotifyForArtists', 'Spotify For Artists') }
+
+
+                                {this.props.artist.ascap && (
+                                    <tr>
+                                        <td><a target="_blank" href={'https://www.ascap.com/'}>ASCAP</a></td>
+                                        <td>
+                                            <div className={"row"}>
+                                                <div className={"col-sm-2"}>
+                                                    {this.props.artist.ascap || ""}
+                                                </div>
+                                                <div className={"col-sm-10"}>
+                                                    For additional login credentials, please consult your personal records or email the artist.
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                                }
+
+                                {this.props.artist.bmi && (
+                                    <tr>
+                                        <td><a target="_blank" href={'https://www.bmi.com/'}>BMI</a></td>
+                                        <td>
+                                            <div className={"row"}>
+                                                <div className={"col-sm-2"}>
+                                                    {this.props.artist.bmi || ""}
+                                                </div>
+                                                <div className={"col-sm-10"}>
+                                                    For additional login credentials, please consult your personal records or email the artist.
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                                }
+
+                                {this.props.artist.soundExchange && (
+                                    <tr>
+                                        <td><a target="_blank" href={'https://www.soundexchange.com/'}>SoundExchange</a></td>
+                                        <td>
+                                            <div className={"row"}>
+                                                <div className={"col-sm-2"}>
+                                                    {this.props.artist.soundExchange || ""}
+                                                </div>
+                                                <div className={"col-sm-10"}>
+                                                    For additional login credentials, please consult your personal records or email the artist.
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                                }
+
+                                {this.props.artist.mlc && (
+                                    <tr>
+                                        <td><a target="_blank" href={'https://www.themlc.com/'}>MLC</a></td>
+                                        <td>
+                                            <div className={"row"}>
+                                                <div className={"col-sm-2"}>
+                                                    {this.props.artist.mlc || ""}
+                                                </div>
+                                                <div className={"col-sm-10"}>
+                                                    For additional login credentials, please consult your personal records or email the artist.
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                                }
+
+                                {this.props.artist.songTrust && (
+                                    <tr>
+                                        <td><a target="_blank" href={'https://www.songtrust.com/'}>Songtrust</a></td>
+                                        <td>
+                                            <div className={"row"}>
+                                                <div className={"col-sm-2"}>
+                                                    {this.props.artist.songTrust || ""}
+                                                </div>
+                                                <div className={"col-sm-10"}>
+                                                    For additional login credentials, please consult your personal records or email the artist.
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                                }
+
+                                {this.props.artist.googleDrive && (
+                                    <tr>
+                                        <td><a target="_blank" href={'https://accounts.google.com/ServiceLogin/identifier?service=wise&passive=1209600&continue=https%3A%2F%2Fdrive.google.com%2Fdrive%2Fpriority&followup=https%3A%2F%2Fdrive.google.com%2Fdrive%2Fpriority&flowName=GlifWebSignIn&flowEntry=ServiceLogin'}>Google Drive</a></td>
+                                        <td>
+                                            <div className={"row"}>
+                                                <div className={"col-sm-2"}>
+                                                    {this.props.artist.googleDrive || ""}
+                                                </div>
+                                                <div className={"col-sm-10"}>
+                                                    For additional login credentials, please consult your personal records or email the artist.
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                                }
+                                {this.props.artist.venmo && (
+                                    <tr>
+                                        <td><a target="_blank" href={'https://venmo.com/'}>Venmo</a></td>
+                                        <td>
+                                            <div className={"row"}>
+                                                <div className={"col-sm-2"}>
+                                                    {this.props.artist.venmo || ""}
+                                                </div>
+                                                <div className={"col-sm-10"}>
+                                                    For additional login credentials, please consult your personal records or email the artist.
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                                }
+
+                                {this.props.artist.payPal && (
+                                    <tr>
+                                        <td><a target="_blank" href={'https://www.paypal.com/us/webapps/mpp/home'}>PayPal</a></td>
+                                        <td>
+                                            <div className={"row"}>
+                                                <div className={"col-sm-2"}>
+                                                    {this.props.artist.payPal || ""}
+                                                </div>
+                                                <div className={"col-sm-10"}>
+                                                    For additional login credentials, please consult your personal records or email the artist.
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                                }
+
+                                {this.props.artist.cashapp && (
+                                    <tr>
+                                        <td><a target="_blank" href={'https://cash.app/'}>Cash App</a></td>
+                                        <td>
+                                            <div className={"row"}>
+                                                <div className={"col-sm-2"}>
+                                                    {this.props.artist.payPal || ""}
+                                                </div>
+                                                <div className={"col-sm-10"}>
+                                                    For additional login credentials, please consult your personal records or email the artist.
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                                }
+                                </React.Fragment>
+                            )
+        }
+        else {
+            return <React.Fragment></React.Fragment>
+        }
+    }
+
+    render() {
+
+        return(
+            <div>
+                <table className={"table"}>
+                    <tbody>
+                        <tr><td>Artist Name</td>
+                            <td>{this.props.artist.artist_name|| "" }
+                            </td>
+                        </tr>
+                        <tr><td>Legal Name</td>
+                            <td>
+                                {this.props.artist.legal_name|| "" }
+                            </td>
+                        </tr>
+                        <tr><td>Email</td>
+                            <td>
+                                {this.props.artist.email|| "" }
+                            </td>
+                        </tr>
+                        <tr><td>Phone Number</td>
+                            <td>
+                                {this.props.artist.phone_number|| "" }
+                            </td>
+                        </tr>
+                        <tr><td>Address</td>
+                            <td>
+                                {this.props.artist.address|| "" }
+                            </td>
+                        </tr>
+                        <tr><td>Date of Birth</td>
+                            <td>
+                                {this.props.artist.date_of_birth|| "" }
+                            </td>
+                        </tr>
+                        {this.props.artist.primary_genre && (
+                            <tr>
+                                <td>Primary Genre</td>
+                                <td>
+                                    {this.props.artist.primary_genre.name}
+                                </td>
+                            </tr>)
+                        }
+                        { this.props.artist.secondary_genre &&
+                            (<tr><td>Secondary Genre</td>
+                                <td>
+                                    {this.props.artist.secondary_genre.name }
+                                </td>
+                            </tr>)
+                        }
+                        {this.props.artist.tertiary_genre && (
+                            <tr>
+                                <td>Tertiary Genre</td>
+                                <td>
+                                    {this.props.artist.tertiary_genre.name}
+                                </td>
+                            </tr>
+                            )
+                        }
+
+                        {/* TODO EXTRA TEXT FOR USER FRIENDLINESS */}
+                        {this.props.artist.website && (
+                            <tr>
+                                <td>Website</td>
+                                <td><a target="_blank" href={this.props.artist.website || ""}>{this.props.artist.website || ""}</a>
+                                </td>
+                            </tr>
+                            )
+                        }
+                        { this.secondaryItems() }
+
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+}
+
+
+
+
 
 
 class EditForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = { edit: ""}
-
-
     }
 
 
@@ -18,8 +321,8 @@ class EditForm extends React.Component {
                         Object.keys(this.props.artist[name]).map(key => {
                             if(key != "id") {
                                 return (<React.Fragment key={key}>
-                                    <div className={"col-xs-1"}><label>{key}</label></div>
-                                    <div className={"col-xs-1"}>
+                                    <div className={"col-md-2"}><label>{key}</label></div>
+                                    <div className={"col-md-2"}>
                                         {key != "verified" ?
                                             (<input className="form-control"
                                                     onChange={e => this.props.editForeignHelper(e, name, key)}
@@ -34,7 +337,9 @@ class EditForm extends React.Component {
                             }
                         })
                     }
-                    <div className={"col-xs-1"}>
+                </div>
+                <div className={"row"}>
+                    <div className={"col-md-2"}>
                     <button onClick={ e => this.props.saveForeign(e, name) }
                             className="btn btn-dark">Save</button>
                 </div>
@@ -48,8 +353,8 @@ class EditForm extends React.Component {
                         if(key != "id") {
                             return (
                                 <React.Fragment key={key}>
-                                    <div className={"col-xs-1"}>{ key }</div>
-                                <div className={"col-xs-1"}>
+                                    <div className={"col-sm-2"}>{ key }</div>
+                                <div className={"col-sm-2"}>
                                     {  key == "verified"  ? (this.props.artist[name].verified == true ? "True" : "False")
                                         : this.props.artist[name][key]}
                                 </div>
@@ -57,8 +362,9 @@ class EditForm extends React.Component {
                         }
                     })
                 }
-
-                <div className={"col-xs-1"}>
+            </div>
+                <div className={"row"}>
+                <div className={"col-sm-2"}>
                     <button onClick={ e => this.props.editForeign(e, name) }
                             className="btn btn-dark">Edit</button>
                 </div>
@@ -81,118 +387,103 @@ class EditForm extends React.Component {
 
                             </tr>
                             <tr><td>Facebook</td>
-                                <td>
-                                    <input className="form-control"
-                                           onChange={ e => this.props.updateArtist({facebook : e.target.value})}
-                                           value={this.props.artist.facebook|| "" } />
-                                </td>
+                                { this.displayForeign('facebook') }
+
                             </tr>
                             <tr><td>Twitter</td>
-                                <td>
-                                    <input className="form-control"
-                                           onChange={ e => this.props.updateArtist({twitter : e.target.value})}
-                                           value={this.props.artist.twitter|| "" } />
-                                </td>
+                                { this.displayForeign('twitter') }
+
                             </tr>
                             <tr><td>LinkedIn</td>
-                                <td>
-                                    <input className="form-control"
-                                           onChange={ e => this.props.updateArtist({linkedin : e.target.value})}
-                                           value={this.props.artist.linkedin|| "" } />
-                                </td>
+                                { this.displayForeign('linkedIn') }
+
                             </tr>
                             <tr><td>TikTok</td>
-                                <td>
-                                    <input className="form-control"
-                                           onChange={ e => this.props.updateArtist({tiktok : e.target.value})}
-                                           value={this.props.artist.tiktok|| "" } />
-                                </td>
+                                { this.displayForeign('tikTok') }
+
                             </tr>
                             <tr><td>YouTube</td>
-                                <td>
-                                    <input className="form-control"
-                                           onChange={ e => this.props.updateArtist({youtube : e.target.value})}
-                                           value={this.props.artist.youtube|| "" } />
-                                </td>
+                                { this.displayForeign('youTube') }
+
                             </tr>
                             <tr><td>SoundCloud</td>
-                                <td>
-                                    <input className="form-control"
-                                           onChange={ e => this.props.updateArtist({soundCloud : e.target.value})}
-                                           value={this.props.artist.soundCloud|| "" } />
-                                </td>
+                                { this.displayForeign('soundCloud') }
+
                             </tr>
                             <tr><td>Bandcamp</td>
-                                <td>
-                                    <input className="form-control"
-                                           onChange={ e => this.props.updateArtist({bandCamp : e.target.value})}
-                                           value={this.props.artist.bandCamp|| "" } />
-                                </td>
+                                { this.displayForeign('bandCamp') }
+
                             </tr>
                             <tr><td>Spotify For Artists</td>
-                                <td>
-                                    <input className="form-control"
-                                           onChange={ e => this.props.updateArtist({spotifyForArtists : e.target.value})}
-                                           value={this.props.artist.spotifyForArtists|| "" } />
-                                </td>
+                                { this.displayForeign('spotifyForArtists') }
+
                             </tr>
-                            <tr><td>ASCAP</td>
+                            <tr>
+                                <td><a target="_blank" href={'https://www.ascap.com/'}>ASCAP</a></td>
                                 <td>
                                     <input className="form-control"
                                            onChange={ e => this.props.updateArtist({ascap : e.target.value})}
                                            value={this.props.artist.ascap|| "" } />
                                 </td>
                             </tr>
-                            <tr><td>BMI</td>
+                            <tr>
+                                <td><a target="_blank" href={'https://www.bmi.com/'}>BMI</a></td>
                                 <td>
                                     <input className="form-control"
                                            onChange={ e => this.props.updateArtist({bmi : e.target.value})}
                                            value={this.props.artist.bmi|| "" } />
                                 </td>
                             </tr>
-                            <tr><td>SoundExchange</td>
+                            <tr>
+                                <td><a target="_blank" href={'https://www.soundexchange.com/'}>SoundExchange</a></td>
                                 <td>
                                     <input className="form-control"
                                            onChange={ e => this.props.updateArtist({soundExchange : e.target.value})}
                                            value={this.props.artist.soundExchange|| "" } />
                                 </td>
                             </tr>
-                            <tr><td>MLC</td>
+                            <tr>
+                                <td><a target="_blank" href={'https://www.themlc.com/'}>MLC</a></td>
                                 <td>
                                     <input className="form-control"
                                            onChange={ e => this.props.updateArtist({mlc : e.target.value})}
                                            value={this.props.artist.mlc|| "" } />
                                 </td>
                             </tr>
-                            <tr><td>Songtrust</td>
+                            <tr>
+                                <td><a target="_blank" href={'https://www.songtrust.com/'}>Songtrust</a></td>
                                 <td>
                                     <input className="form-control"
                                            onChange={ e => this.props.updateArtist({songTrust : e.target.value})}
                                            value={this.props.artist.songTrust|| "" } />
                                 </td>
                             </tr>
-                            <tr><td>Google Drive</td>
+                            <tr>
+                                <td><a target="_blank" href={'https://accounts.google.com/ServiceLogin/identifier?service=wise&passive=1209600&continue=https%3A%2F%2Fdrive.google.com%2Fdrive%2Fpriority&followup=https%3A%2F%2Fdrive.google.com%2Fdrive%2Fpriority&flowName=GlifWebSignIn&flowEntry=ServiceLogin'}>Google Drive</a></td>
                                 <td>
                                     <input className="form-control"
                                            onChange={ e => this.props.updateArtist({googleDrive : e.target.value})}
                                            value={this.props.artist.googleDrive|| "" } />
                                 </td>
                             </tr>
-                            <tr><td>Venmo</td>
+                            <tr>
+                                <td><a target="_blank" href={'https://venmo.com/'}>Venmo</a></td>
                                 <td>
                                     <input className="form-control"
                                            onChange={ e => this.props.updateArtist({venmo : e.target.value})}
                                            value={this.props.artist.venmo|| "" } />
                                 </td>
                             </tr>
-                            <tr><td>PayPal</td>
+                            <tr>
+                                <td><a target="_blank" href={'https://www.paypal.com/us/webapps/mpp/home'}>PayPal</a></td>
                                 <td>
                                     <input className="form-control"
                                            onChange={ e => this.props.updateArtist({payPal : e.target.value})}
                                            value={this.props.artist.payPal|| "" } />
                                 </td>
                             </tr>
-                            <tr><td>Cash App</td>
+                            <tr>
+                                <td><a target="_blank" href={'https://cash.app/'}>Cash App</a></td>
                                 <td>
                                     <input className="form-control"
                                            onChange={ e => this.props.updateArtist({cashapp : e.target.value})}
@@ -274,16 +565,36 @@ class EditForm extends React.Component {
                         </tr>
                         <tr><td>Secondary Genre</td>
                             <td>
-                                <input className="form-control"
+                                <select className="form-control"
                                        onChange={ e => this.props.updateArtist({secondary_genre : e.target.value})}
-                                       value={this.props.artist.secondary_genre|| "" } />
+                                       value={this.props.artist.secondary_genre }>
+                                    { !this.props.artist.secondary_genre &&
+                                        <option>Select Genre</option>
+                                    }
+                                    { this.props.genres.map( (gen, idx) =>
+                                        {
+
+                                            return <option value={gen.id} key={gen.name}>{gen.name}</option>
+                                        }
+                                    )}
+                                </select>
                             </td>
                         </tr>
                         <tr><td>Tertiary Genre</td>
                             <td>
-                                <input className="form-control"
+                                <select className="form-control"
                                        onChange={ e => this.props.updateArtist({tertiary_genre : e.target.value})}
-                                       value={this.props.artist.tertiary_genre|| "" } />
+                                       value={this.props.artist.tertiary_genre }>
+                                    { !this.props.artist.tertiary_genre &&
+                                        <option>Select Genre</option>
+                                    }
+                                    { this.props.genres.map( (gen, idx) =>
+                                        {
+
+                                            return <option value={gen.id} key={gen.name}>{gen.name}</option>
+                                        }
+                                    )}
+                                </select>
                             </td>
                         </tr>
                         <tr><td>Website</td>
@@ -307,9 +618,11 @@ class EditForm extends React.Component {
 class Artist extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {id :  document.getElementById('artist_id').value || "",
+        let artist_id = document.getElementById('artist_id').value
+        this.state = {id : artist_id || "",
             manager_id : document.getElementById('manager_id').value || "",
-            artist : {}, genres: [], err: false, edit: ""
+            artist : {}, genres: [], err: false, edit: "",
+            mode : artist_id ? "display" : "edit"
         }
         this.updateArtist = this.updateArtist.bind(this)
         this.formSubmit = this.formSubmit.bind(this)
@@ -352,7 +665,15 @@ class Artist extends React.Component {
         ).then(json =>
             {
                 if(json.id) {
-                    const artist = {...this.state.artist}
+                    const artist = {}
+                    Object.keys(this.state.artist).forEach(key => {
+                        if(typeof this.state.artist[key] != 'object') {
+                            artist[key] = this.state.artist[key]
+                        }
+                        else if(key === "primary_genre") {
+                            artist[key] = this.state.artist.primary_genre.id;
+                        }
+                    })
                     artist[name] = json.id
                     this.formSubmit(e, artist)
                 }
@@ -365,10 +686,23 @@ class Artist extends React.Component {
         if(!  this.state.artist[name]) {
 
             let artist = { ...this.state.artist}
-            // ifs for crazy socials and non verified
-            artist[name] = {verified: false, username: "", followers: 0}
 
-            // artist[name] = {username: "", cool: false }
+            if( name == "instagram" || name == "facebook"  || name == "twitter" || name == "tikTok"){
+                artist[name] = {verified: false, username: "", followers: 0}
+            }
+
+            if( name == "linkedIn" || name == "youTube"  || name == "BandCamp" ){
+                artist[name] = {username: "", followers: 0}
+            }
+
+            if( name == "soundCloud" ){
+                artist[name] = {username: "", followers: 0, streams: 0}
+            }
+
+            if( name == "spotifyForArtists" ){
+                artist[name] = {verified: false, username: "", followers: 0, monthly_listeners: 0}
+            }
+
             this.setState({edit: name, artist: artist})
         }
         else {
@@ -401,16 +735,31 @@ class Artist extends React.Component {
             link += this.state.id + '/'
         }
 
+        if(artist === undefined) {
+            artist = this.state.artist
+        }
+        const obj = {}
+        Object.keys(artist).forEach(key => {
+            if(typeof artist[key] != 'object') {
+                obj[key] = artist[key]
+
+            }
+            else if(key === "primary_genre") {
+                obj[key] = this.state.artist.primary_genre.id;
+            }
+
+        })
+
         fetch(link,
             {method: method,
              headers: { 'Content-type': 'application/json'},
-             body: JSON.stringify(artist || this.state.artist)
+             body: JSON.stringify(obj)
         }
         ).then(resp => resp.json()
         ).then(json => {
             console.log(json)
             if(json.id) {
-                this.setState({artist : json, edit: ""})
+                this.setState({artist : json, edit: "", mode: "display"})
             }
             else {
                 this.setState({ err: true })
@@ -425,16 +774,35 @@ class Artist extends React.Component {
 
         this.setState({ artist : artist})
     }
+
+    renderDisplay() {
+        return (
+            <div>
+                <ArtistView artist={this.state.artist} create={this.state.artist.id ? false : true}
+                                updateArtist={this.updateArtist} genres={this.state.genres}
+                                edit={this.state.edit}
+                                formSubmit={this.formSubmit} editForeign={this.editForeign}
+                                saveForeign={this.saveForeign} editForeignHelper={this.editForeignHelper}/>
+                   <div className={"row"}>
+                       <button onClick={e => this.setState({mode: "edit"})}
+                               className="btn btn-primary">Edit
+                       </button>
+                   </div>
+            </div>)
+    }
+
+    renderEdit() {
+        return ( <EditForm artist={this.state.artist} create={this.state.artist.id ? false : true}
+                   updateArtist={this.updateArtist} genres={this.state.genres}
+                   edit={this.state.edit}
+                   formSubmit={this.formSubmit} editForeign={this.editForeign}
+                   saveForeign={this.saveForeign} editForeignHelper={this.editForeignHelper} />)
+    }
     render() {
-
-       return (<EditForm artist={this.state.artist} create={ this.state.artist.id ? false : true }
-            updateArtist={ this.updateArtist } genres={this.state.genres}
-                         edit={this.state.edit}
-                         formSubmit={this.formSubmit } editForeign={this.editForeign}
-                         saveForeign={this.saveForeign} editForeignHelper={this.editForeignHelper}
-
-       />)
-
+        if(this.state.mode == "display") {
+            return this.renderDisplay()
+        }
+        return this.renderEdit()
     }
 }
 
@@ -444,4 +812,4 @@ ReactDOM.render(
 )
 
 
-console.log("0.24")
+console.log("0.30")
