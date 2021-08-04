@@ -35,9 +35,17 @@
     - In the box or studio
     - Number of overdubs
     - Select promotional materials
+
 2. Form results in...
    - TODO list for the project based on artist profile and questions from form
    - total project length in months/weeks/days with time value at each step
     - Recommended personnel from the site database
     - Links to relevant site and documents for more information
     - form should be accessible by user once created
+   
+### Project Planning Form Questions
+1. Which artist
+2. Song number
+3. In the Box or Out of the box
+   1. In the box
+   - 

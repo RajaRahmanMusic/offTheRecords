@@ -67,7 +67,7 @@ class Twitter(models.Model):
         return self.username
 
 
-class LinkedIn (models.Model):
+class LinkedIn(models.Model):
     username = models.CharField(max_length=64)
     followers = models.IntegerField(default=0)
 
@@ -95,6 +95,7 @@ class SpotifyForArtists(models.Model):
     username = models.CharField(max_length=64)
     followers = models.IntegerField(default=0)
     monthly_listeners = models.IntegerField(default=0)
+    verified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -150,3 +151,19 @@ class Artist(models.Model):
     venmo = models.CharField(max_length=64, blank=True, null=True)
     payPal = models.CharField(max_length=64, blank=True, null=True)
     cashapp = models.CharField(max_length=64, blank=True, null=True)
+
+class Item(models.Model):
+    name = models.CharField(max_length=128, unique=True)
+
+class Project(models.Model):
+    artist = models.ForeignKey(Artist, on_delete=models.PROTECT)
+    name = models.CharField(max_length=128)
+    started_on = models.DateField()
+
+class ProjectItem(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.PROTECT)
+    duration = models.IntegerField()
+    depends_on = models.ForeignKey('ProjectItem', on_delete=models.PROTECT,
+                                   null=True, blank=True)
+
+

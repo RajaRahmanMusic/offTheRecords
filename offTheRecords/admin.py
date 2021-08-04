@@ -61,7 +61,12 @@ class BandCampAdmin(admin.ModelAdmin):
 class SpotifyForArtistsAdmin(admin.ModelAdmin):
     list_display = ['username', 'followers', 'monthly_listeners']
 
+class ItemAdmin(admin.ModelAdmin):
+    list_display =  ['name']
 
+class ProjectAdmin(admin.ModelAdmin):
+    #list_display = ['name','artist','started_on']
+    pass
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Artist, ArtistAdmin)
 admin.site.register(models.Contractor_info, Contractor_infoAdmin)

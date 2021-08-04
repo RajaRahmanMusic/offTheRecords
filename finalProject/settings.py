@@ -130,3 +130,4 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL="offTheRecords.User"
 DEFAULT_AUTO_FIELD="django.db.models.AutoField"
 
+LOGIN_URL = "/login"

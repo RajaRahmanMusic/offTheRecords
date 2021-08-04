@@ -13,10 +13,10 @@
         <div class="container">
             <nav class = "navbar">
                 <div class = "row">
-                    <a class="navbar-brand" href="{% url 'index' %}">Home</a>
+                    <a class="navbar-brand" href="{% url 'index' %}">Off The Records</a>
                     {% if request.user.role == 1 %}
                     <div class="nav-item">
-                        <a class="nav-link" href="">Add New Artist</a>
+                        <a class="nav-link" href="{%  url 'new_artist' %}">Add New Artist</a>
                     </div>
                     {% endif %}
                     <div class="nav-item">
