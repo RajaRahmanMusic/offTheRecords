@@ -57,6 +57,7 @@ class ArtistViewSet(viewsets.ModelViewSet):
 
         return serializers.ArtistSerializer
 
+
 class InstagramViewSet(viewsets.ModelViewSet):
     queryset = models.Instagram.objects.all()
     serializer_class = serializers.InstagramSerializer
@@ -105,8 +106,25 @@ class BandCampViewSet(viewsets.ModelViewSet):
     authentication_classes = (CsrfExcept, )
 
 
-
 class SpotifyForArtistsViewSet(viewsets.ModelViewSet):
     queryset = models.SpotifyForArtists.objects.all()
     serializer_class = serializers.SpotifyForArtistsSerializer
+    authentication_classes = (CsrfExcept, )
+
+
+class ItemViewSet(viewsets.ModelViewSet):
+    queryset = models.Item.objects.all()
+    serializer_class = serializers.ItemSerializer
+    authentication_classes = (CsrfExcept, )
+
+
+class ProjectViewSet(viewsets.ModelViewSet):
+    queryset = models.Project.objects.all()
+    serializer_class = serializers.ProjectSerializer
+    authentication_classes = (CsrfExcept, )
+
+
+class ProjectItemViewSet(viewsets.ModelViewSet):
+    queryset = models.ProjectItem.objects.all()
+    serializer_class = serializers.ProjectItemSerializer
     authentication_classes = (CsrfExcept, )

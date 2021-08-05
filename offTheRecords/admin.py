@@ -65,7 +65,7 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = ['name', 'depends_on', 'duration', 'song_per_duration']
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ['name','artist','started_on', 'num_songs', 'num_od']
+    list_display = ['name', 'artist', 'start_date', 'num_songs', 'num_od']
 
 class ProjectItemAdmin(admin.ModelAdmin):
     list_display = ['item', 'project']

@@ -166,7 +166,7 @@ class Item(models.Model):
 class Project(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.PROTECT)
     name = models.CharField(max_length=128)
-    started_on = models.DateField()
+    start_date = models.DateField(blank=True, null=True)
     num_songs = models.IntegerField(default=1)
     num_od = models.IntegerField(default=1)
     task = models.ManyToManyField(to=Item, through ='ProjectItem')

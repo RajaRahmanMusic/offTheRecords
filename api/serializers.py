@@ -1,6 +1,25 @@
 from rest_framework import serializers
 from offTheRecords import models
 
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Item
+        fields = '__all__'
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Project
+        fields = '__all__'
+
+
+class ProjectItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProjectItem
+        fields = '__all__'
+
+
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Genre
@@ -73,7 +92,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     primary_genre = GenreSerializer(required=False)
     secondary_genre = GenreSerializer()
     tertiary_genre = GenreSerializer()
-
+    # date_of_birth = serializers.DateField(format="%m-%d-%Y")
     class Meta:
         model = models.Artist
         fields = ['artist_name', 'legal_name',
@@ -101,4 +120,4 @@ class ArtistWritableSerializer(serializers.ModelSerializer):
                   'linkedin', 'twitter', 'tiktok', 'youtube', 'ascap',
                   'bmi', 'soundExchange', 'mlc', 'spotifyForArtists',
                   'songTrust', 'googleDrive', 'venmo', 'payPal',
-                  'cashapp', 'soundCloud', 'bandCamp', 'id',]
+                  'cashapp', 'soundCloud', 'bandCamp', 'id']

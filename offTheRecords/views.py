@@ -39,6 +39,21 @@ def index(request):
         return HttpResponseRedirect(reverse("login"))
 
 @login_required
+def plan_list(request):
+
+    # Authenticated users view their inbox
+    if request.user.is_authenticated:
+
+        return render(request, "offTheRecords/project_list.html")
+
+
+    # Everyone else is prompted to sign in
+    else:
+        return HttpResponseRedirect(reverse("login"))
+
+
+
+@login_required
 def artist_view(request, slug=None):
     if slug:
         qs = models.Artist.objects.filter(manager=request.user)
@@ -52,26 +67,26 @@ def artist_view(request, slug=None):
         artist = None
     return render(request, 'offTheRecords/artist.html', {'artist': artist})
 
+@login_required
+def project_planning_results_view(request, slug1):
+    if slug1:
+        # get the artists managed by this user regardless of
+        # artist role or manager role
+        artists = models.Artist.objects.filter(manager=request.user)
+        # find projects with this name
+        qs2 = models.Project.objects.filter(name=slug1)
+        # filter that fruther to be projects owned by one of the artists abve
 
-def project_planning_results_view(request, slug1, slug2):
-    if slug1 and slug2:
-        qs1 = models.Artist.objects.filter(manager=request.user)
-        qs2 = models.Project.objects.filter(artist__us)
 
         try:
-            artist = qs1.get(artist_name=slug1)
+            project = qs2.get(artist__in=artists)
         except models.Artist.DoesNotExist:
             return redirect(reverse("index"))
-
-        try:
-            project = qs2.get(name=slug2)
-        except models.Artist.DoesNotExist:
-            return redirect(reverse("index"))
-
     else:
         return redirect(reverse("index"))
 
-    return render(request, 'offTheRecords/project_planning_results.html', {'artist': artist, 'project': project})
+    return render(request, 'offTheRecords/project_planning_results.html',
+                  {'artists': artists, 'project': project})
 
 
 def login_view(request):

@@ -1,6 +1,5 @@
 // npx babel --watch jsx --out-dir offTheRecords/static/ --presets react-app/prod
 
-// FOREIGN KEY FIELDS DO NOT RETURN USERNAME AS DESIGNED IN MODELS.PY
 
 class Manager extends React.Component {
     constructor(props) {

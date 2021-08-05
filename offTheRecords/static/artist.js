@@ -8,7 +8,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-{/* TODO ADD ANCHOR FOR FOREIGN KEY 3rd PARTY WEBSITES */}
 {/* TODO MAKE DATE FIELD MORE USER FRIENDLY */}
 
 var ArtistView = function (_React$Component) {
@@ -25,10 +24,10 @@ var ArtistView = function (_React$Component) {
 
     _createClass(ArtistView, [{
         key: "displayForeign",
-        value: function displayForeign(name, title) {
+        value: function displayForeign(name, title, link) {
             var _this2 = this;
 
-            console.log(name, title);
+            console.log(name, title, link);
             if (this.props.artist[name]) {
                 return React.createElement(
                     "tr",
@@ -36,7 +35,11 @@ var ArtistView = function (_React$Component) {
                     React.createElement(
                         "td",
                         null,
-                        title
+                        link ? React.createElement(
+                            "a",
+                            { href: link, target: "_blank" },
+                            title
+                        ) : title
                     ),
                     React.createElement(
                         "td",
@@ -74,15 +77,15 @@ var ArtistView = function (_React$Component) {
                 return React.createElement(
                     React.Fragment,
                     null,
-                    this.displayForeign('instagram', 'Instagram'),
-                    this.displayForeign('facebook', 'Facebook'),
-                    this.displayForeign('twitter', 'Twitter'),
-                    this.displayForeign('linkedIn', 'LinkedIn'),
-                    this.displayForeign('tikTok', 'TikTok'),
-                    this.displayForeign('youTube', 'YouTube'),
-                    this.displayForeign('soundCloud', 'SoundCloud'),
-                    this.displayForeign('bandCamp', 'Bandcamp'),
-                    this.displayForeign('spotifyForArtists', 'Spotify For Artists'),
+                    this.displayForeign('instagram', 'Instagram', 'https://instagram.com/'),
+                    this.displayForeign('facebook', 'Facebook', 'https://www.facebook.com/'),
+                    this.displayForeign('twitter', 'Twitter', 'https://twitter.com/?lang=en'),
+                    this.displayForeign('linkedIn', 'LinkedIn', 'https://www.linkedin.com/'),
+                    this.displayForeign('tikTok', 'TikTok', 'https://www.tiktok.com/en/'),
+                    this.displayForeign('youTube', 'YouTube', 'https://www.youtube.com/'),
+                    this.displayForeign('soundCloud', 'SoundCloud', 'https://soundcloud.com/'),
+                    this.displayForeign('bandCamp', 'Bandcamp', 'https://bandcamp.com/'),
+                    this.displayForeign('spotifyForArtists', 'Spotify For Artists', 'https://artists.spotify.com/'),
                     this.props.artist.ascap && React.createElement(
                         "tr",
                         null,
@@ -680,7 +683,15 @@ var EditForm = function (_React$Component2) {
                         React.createElement(
                             "td",
                             null,
-                            "Instagram"
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { target: "_blank", href: 'https://www.instagram.com/' },
+                                    "Instagram"
+                                )
+                            )
                         ),
                         this.displayForeign('instagram')
                     ),
@@ -690,7 +701,15 @@ var EditForm = function (_React$Component2) {
                         React.createElement(
                             "td",
                             null,
-                            "Facebook"
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { target: "_blank", href: 'https://www.facebook.com/' },
+                                    "Facebook"
+                                )
+                            )
                         ),
                         this.displayForeign('facebook')
                     ),
@@ -700,7 +719,15 @@ var EditForm = function (_React$Component2) {
                         React.createElement(
                             "td",
                             null,
-                            "Twitter"
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { target: "_blank", href: 'https://twitter.com/?lang=en' },
+                                    "Twitter"
+                                )
+                            )
                         ),
                         this.displayForeign('twitter')
                     ),
@@ -710,7 +737,15 @@ var EditForm = function (_React$Component2) {
                         React.createElement(
                             "td",
                             null,
-                            "LinkedIn"
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { target: "_blank", href: 'https://www.linkedin.com/' },
+                                    "LinkedIn"
+                                )
+                            )
                         ),
                         this.displayForeign('linkedIn')
                     ),
@@ -720,7 +755,15 @@ var EditForm = function (_React$Component2) {
                         React.createElement(
                             "td",
                             null,
-                            "TikTok"
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { target: "_blank", href: 'https://www.tiktok.com/en/' },
+                                    "TikTok"
+                                )
+                            )
                         ),
                         this.displayForeign('tikTok')
                     ),
@@ -730,7 +773,15 @@ var EditForm = function (_React$Component2) {
                         React.createElement(
                             "td",
                             null,
-                            "YouTube"
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { target: "_blank", href: 'https://www.youtube.com/' },
+                                    "YouTube"
+                                )
+                            )
                         ),
                         this.displayForeign('youTube')
                     ),
@@ -740,7 +791,15 @@ var EditForm = function (_React$Component2) {
                         React.createElement(
                             "td",
                             null,
-                            "SoundCloud"
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { target: "_blank", href: 'https://soundcloud.com/' },
+                                    "SoundCloud"
+                                )
+                            )
                         ),
                         this.displayForeign('soundCloud')
                     ),
@@ -750,7 +809,15 @@ var EditForm = function (_React$Component2) {
                         React.createElement(
                             "td",
                             null,
-                            "Bandcamp"
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { target: "_blank", href: 'https://bandcamp.com/' },
+                                    "Bandcamp"
+                                )
+                            )
                         ),
                         this.displayForeign('bandCamp')
                     ),
@@ -760,7 +827,15 @@ var EditForm = function (_React$Component2) {
                         React.createElement(
                             "td",
                             null,
-                            "Spotify For Artists"
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { target: "_blank", href: 'https://artists.spotify.com/' },
+                                    "Spotify For Artists"
+                                )
+                            )
                         ),
                         this.displayForeign('spotifyForArtists')
                     ),
@@ -1083,7 +1158,8 @@ var EditForm = function (_React$Component2) {
                             React.createElement(
                                 "td",
                                 null,
-                                React.createElement("input", { className: "form-control",
+                                React.createElement("input", { className: "form-control", type: "date",
+                                    pattern: "\d{2}-\d{2}-\d{4}",
                                     onChange: function onChange(e) {
                                         return _this6.props.updateArtist({ date_of_birth: e.target.value });
                                     },
@@ -1107,7 +1183,7 @@ var EditForm = function (_React$Component2) {
                                         onChange: function onChange(e) {
                                             return _this6.props.updateArtist({ primary_genre: e.target.value });
                                         },
-                                        value: this.props.artist.primary_genre },
+                                        value: this.props.artist.primary_genre && this.props.artist.primary_genre.id },
                                     !this.props.artist.primary_genre && React.createElement(
                                         "option",
                                         null,
@@ -1141,7 +1217,7 @@ var EditForm = function (_React$Component2) {
                                         onChange: function onChange(e) {
                                             return _this6.props.updateArtist({ secondary_genre: e.target.value });
                                         },
-                                        value: this.props.artist.secondary_genre },
+                                        value: this.props.artist.secondary_genre && this.props.artist.secondary_genre.id },
                                     !this.props.artist.secondary_genre && React.createElement(
                                         "option",
                                         null,
@@ -1175,7 +1251,7 @@ var EditForm = function (_React$Component2) {
                                         onChange: function onChange(e) {
                                             return _this6.props.updateArtist({ tertiary_genre: e.target.value });
                                         },
-                                        value: this.props.artist.tertiary_genre },
+                                        value: this.props.artist.tertiary_genre && this.props.artist.tertiary_genre.id },
                                     !this.props.artist.tertiary_genre && React.createElement(
                                         "option",
                                         null,
@@ -1458,4 +1534,4 @@ var Artist = function (_React$Component3) {
 var elem = document.getElementById("root");
 ReactDOM.render(React.createElement(Artist, null), elem);
 
-console.log("0.30");
+console.log("0.35");

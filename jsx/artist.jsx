@@ -1,4 +1,3 @@
-{/* TODO ADD ANCHOR FOR FOREIGN KEY 3rd PARTY WEBSITES */}
 {/* TODO MAKE DATE FIELD MORE USER FRIENDLY */}
 
 
@@ -9,11 +8,13 @@ class ArtistView extends React.Component {
         this.state = { edit: ""}
     }
 
-    displayForeign(name, title){
-        console.log(name, title)
+    displayForeign(name, title, link){
+        console.log(name, title, link)
         if (this.props.artist[name]) {
             return(
-                <tr><td>{title}</td>
+                <tr><td>
+                    {link ? <a href={link} target={"_blank"}>{title}</a> : title }
+                </td>
 
                 <td><div className={'row'}>
                 {
@@ -43,24 +44,24 @@ class ArtistView extends React.Component {
             return (
                             <React.Fragment>
 
-                                { this.displayForeign('instagram', 'Instagram') }
+                                { this.displayForeign('instagram', 'Instagram', 'https://instagram.com/') }
 
 
-                                { this.displayForeign('facebook', 'Facebook') }
+                                { this.displayForeign('facebook', 'Facebook', 'https://www.facebook.com/') }
 
-                                { this.displayForeign('twitter', 'Twitter') }
+                                { this.displayForeign('twitter', 'Twitter', 'https://twitter.com/?lang=en') }
 
-                                { this.displayForeign('linkedIn', 'LinkedIn') }
+                                { this.displayForeign('linkedIn', 'LinkedIn', 'https://www.linkedin.com/') }
 
-                                { this.displayForeign('tikTok', 'TikTok') }
+                                { this.displayForeign('tikTok', 'TikTok', 'https://www.tiktok.com/en/') }
 
-                                { this.displayForeign('youTube', 'YouTube' ) }
+                                { this.displayForeign('youTube', 'YouTube', 'https://www.youtube.com/' ) }
 
-                                { this.displayForeign('soundCloud', 'SoundCloud') }
+                                { this.displayForeign('soundCloud', 'SoundCloud', 'https://soundcloud.com/') }
 
-                                { this.displayForeign('bandCamp', 'Bandcamp') }
+                                { this.displayForeign('bandCamp', 'Bandcamp', 'https://bandcamp.com/') }
 
-                                { this.displayForeign('spotifyForArtists', 'Spotify For Artists') }
+                                { this.displayForeign('spotifyForArtists', 'Spotify For Artists', 'https://artists.spotify.com/') }
 
 
                                 {this.props.artist.ascap && (
@@ -282,7 +283,6 @@ class ArtistView extends React.Component {
                             )
                         }
 
-                        {/* TODO EXTRA TEXT FOR USER FRIENDLINESS */}
                         {this.props.artist.website && (
                             <tr>
                                 <td>Website</td>
@@ -382,39 +382,48 @@ class EditForm extends React.Component {
         if(  this.props.create === false) {
             return (
                             <React.Fragment>
-                            <tr><td>Instagram</td>
+                            <tr>
+                                <td><div><a target="_blank" href={'https://www.instagram.com/'}>Instagram</a></div></td>
                                 { this.displayForeign('instagram') }
 
                             </tr>
-                            <tr><td>Facebook</td>
+                            <tr>
+                                <td><div><a target="_blank" href={'https://www.facebook.com/'}>Facebook</a></div></td>
                                 { this.displayForeign('facebook') }
 
                             </tr>
-                            <tr><td>Twitter</td>
+                            <tr>
+                                <td><div><a target="_blank" href={'https://twitter.com/?lang=en'}>Twitter</a></div></td>
                                 { this.displayForeign('twitter') }
 
                             </tr>
-                            <tr><td>LinkedIn</td>
+                            <tr>
+                                <td><div><a target="_blank" href={'https://www.linkedin.com/'}>LinkedIn</a></div></td>
                                 { this.displayForeign('linkedIn') }
 
                             </tr>
-                            <tr><td>TikTok</td>
+                            <tr>
+                                <td><div><a target="_blank" href={'https://www.tiktok.com/en/'}>TikTok</a></div></td>
                                 { this.displayForeign('tikTok') }
 
                             </tr>
-                            <tr><td>YouTube</td>
+                            <tr>
+                                <td><div><a target="_blank" href={'https://www.youtube.com/'}>YouTube</a></div></td>
                                 { this.displayForeign('youTube') }
 
                             </tr>
-                            <tr><td>SoundCloud</td>
+                            <tr>
+                                <td><div><a target="_blank" href={'https://soundcloud.com/'}>SoundCloud</a></div></td>
                                 { this.displayForeign('soundCloud') }
 
                             </tr>
-                            <tr><td>Bandcamp</td>
+                            <tr>
+                                <td><div><a target="_blank" href={'https://bandcamp.com/'}>Bandcamp</a></div></td>
                                 { this.displayForeign('bandCamp') }
 
                             </tr>
-                            <tr><td>Spotify For Artists</td>
+                            <tr>
+                                <td><div><a target="_blank" href={'https://artists.spotify.com/'}>Spotify For Artists</a></div></td>
                                 { this.displayForeign('spotifyForArtists') }
 
                             </tr>
@@ -541,7 +550,8 @@ class EditForm extends React.Component {
                         </tr>
                         <tr><td>Date of Birth</td>
                             <td>
-                                <input className="form-control"
+                                <input className="form-control" type={"date"}
+                                       pattern={"\d{2}-\d{2}-\d{4}"}
                                        onChange={ e => this.props.updateArtist({date_of_birth : e.target.value})}
                                        value={this.props.artist.date_of_birth|| "" } />
                             </td>
@@ -550,7 +560,7 @@ class EditForm extends React.Component {
                             <td>
                                 <select className="form-control"
                                        onChange={ e => this.props.updateArtist({primary_genre : e.target.value})}
-                                       value={this.props.artist.primary_genre }>
+                                       value={this.props.artist.primary_genre && this.props.artist.primary_genre.id }>
                                     { !this.props.artist.primary_genre &&
                                         <option>Select Genre</option>
                                     }
@@ -567,7 +577,7 @@ class EditForm extends React.Component {
                             <td>
                                 <select className="form-control"
                                        onChange={ e => this.props.updateArtist({secondary_genre : e.target.value})}
-                                       value={this.props.artist.secondary_genre }>
+                                       value={this.props.artist.secondary_genre && this.props.artist.secondary_genre.id }>
                                     { !this.props.artist.secondary_genre &&
                                         <option>Select Genre</option>
                                     }
@@ -584,7 +594,7 @@ class EditForm extends React.Component {
                             <td>
                                 <select className="form-control"
                                        onChange={ e => this.props.updateArtist({tertiary_genre : e.target.value})}
-                                       value={this.props.artist.tertiary_genre }>
+                                       value={this.props.artist.tertiary_genre && this.props.artist.tertiary_genre.id }>
                                     { !this.props.artist.tertiary_genre &&
                                         <option>Select Genre</option>
                                     }
@@ -798,6 +808,7 @@ class Artist extends React.Component {
                    formSubmit={this.formSubmit} editForeign={this.editForeign}
                    saveForeign={this.saveForeign} editForeignHelper={this.editForeignHelper} />)
     }
+
     render() {
         if(this.state.mode == "display") {
             return this.renderDisplay()
@@ -812,4 +823,6 @@ ReactDOM.render(
 )
 
 
-console.log("0.30")
+
+
+console.log("0.35")
