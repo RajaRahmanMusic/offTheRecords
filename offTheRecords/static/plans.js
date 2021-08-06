@@ -37,6 +37,8 @@ var Project = function (_React$Component) {
             console.log(link);
             window.location.href = "/project_plan/" + link;
         }
+        // similar to main.jsx
+
     }, {
         key: "render",
         value: function render() {
@@ -88,7 +90,7 @@ var Project = function (_React$Component) {
                                 React.createElement(
                                     "td",
                                     null,
-                                    project.artist
+                                    project.artist.artist_name
                                 ),
                                 React.createElement(
                                     "td",

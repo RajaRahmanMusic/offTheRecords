@@ -8,8 +8,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-{/* TODO MAKE DATE FIELD MORE USER FRIENDLY */}
-
 var ArtistView = function (_React$Component) {
     _inherits(ArtistView, _React$Component);
 
@@ -21,6 +19,9 @@ var ArtistView = function (_React$Component) {
         _this.state = { edit: "" };
         return _this;
     }
+
+    // Function displays foreign key elements from artist
+
 
     _createClass(ArtistView, [{
         key: "displayForeign",
@@ -70,6 +71,8 @@ var ArtistView = function (_React$Component) {
                 );
             }
         }
+        // Displays extra info
+
     }, {
         key: "secondaryItems",
         value: function secondaryItems() {
@@ -370,6 +373,9 @@ var ArtistView = function (_React$Component) {
                 return React.createElement(React.Fragment, null);
             }
         }
+
+        // Renders html
+
     }, {
         key: "render",
         value: function render() {
@@ -536,6 +542,9 @@ var ArtistView = function (_React$Component) {
 
     return ArtistView;
 }(React.Component);
+
+// Edits and updates artist info
+
 
 var EditForm = function (_React$Component2) {
     _inherits(EditForm, _React$Component2);
@@ -1311,6 +1320,9 @@ var EditForm = function (_React$Component2) {
 
     return EditForm;
 }(React.Component);
+
+// Updates artist info
+
 
 var Artist = function (_React$Component3) {
     _inherits(Artist, _React$Component3);

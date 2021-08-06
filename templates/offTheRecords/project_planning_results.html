@@ -1,18 +1,46 @@
 {% extends "offTheRecords/layout.html" %}
-{% block script %}
-        <input type="hidden" name="artist_id" value="{{ artist.id }}" id="artist_id" />
-        <input type="hidden" name="manager_id" value="{{ manager.id }}" id="manager_id" />
-     <!-- Load our React component. -->
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript">
-    google.charts.load('current', {'packages':['gantt']});
-    google.charts.setOnLoadCallback(drawChart);
 
-    function toMilliseconds(minutes) {
-      return minutes * 60 * 1000;
+{% block script %}
+
+    <input type="hidden" name="project_id" value="{{ project.id }}" id="project_id" />
+    <input type="hidden" name="artist_id" value="{{ artist.id }}" id="artist_id" />
+    <input type="hidden" name="manager_id" value="{{ manager.id }}" id="manager_id" />
+
+    <!-- Load our js file from the Google charts API. -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+    // Boilerplate from the google charts API
+    var chartTable = undefined;
+    google.charts.load('current', {'packages':['gantt']});
+
+    google.charts.setOnLoadCallback(loadData);
+
+    function loadData() {
+        var project_id = document.getElementById('project_id').value
+        fetch("/api/project/" + project_id + "/").then(resp => resp.json()
+        ).then( json => drawChart(json))
     }
 
-    function drawChart() {
+    function daysToMilliseconds(days) {
+      return days * 24 * 60 * 60 * 1000;
+    }
+
+
+    function findPredecessor(tasks, id) {
+        for(let i = 0 ; i < tasks.length ; i++) {
+            if(tasks[i].id == id) {
+                return tasks[i]
+            }
+        }
+    }
+
+    function drawChart(json) {
+        // Editing and Practice Buffer Items have many dependencies
+        var keys_edit = ["In the Box", "Studio Session", "Overdubs"]
+        var keys_pb = ["In the Box", "Studio Session"]
+
+        // Initialization for mark as complete with bootstrap modal
+        var selection = null;
 
       var otherData = new google.visualization.DataTable();
       otherData.addColumn('string', 'Task ID');
@@ -24,30 +52,173 @@
       otherData.addColumn('number', 'Percent Complete');
       otherData.addColumn('string', 'Dependencies');
 
-      otherData.addRows([
-        ['toTrain', 'Walk to train stop', 'walk', null, null, toMilliseconds(5), 100, null],
-        ['music', 'Listen to music', 'music', null, null, toMilliseconds(70), 100, null],
-        ['wait', 'Wait for train', 'wait', null, null, toMilliseconds(10), 100, 'toTrain'],
-        ['train', 'Train ride', 'train', null, null, toMilliseconds(45), 75, 'wait'],
-        ['toWork', 'Walk to work', 'walk', null, null, toMilliseconds(10), 0, 'train'],
-        ['work', 'Sit down at desk', null, null, null, toMilliseconds(2), 0, 'toWork'],
-      ]);
+      const projectStartDate = new Date(json.start_date);
+
+      // Connects dependencies for editing
+      var dep_edit = []
+        var editing = undefined;
+      json.task.forEach(t => {
+          if(keys_edit.includes(t.item.name)) {
+              dep_edit.push(`${t.item.id}`)
+          }
+          if(t.item.name == "Editing") {
+              editing = t.item
+          }
+      })
+
+        if(editing) {
+            editing.depends_on = dep_edit.join(",")
+        }
+
+        // connects dependencies for Practice Buffer
+        var dep_pb = []
+        var pb = undefined;
+      json.task.forEach(t => {
+          if(keys_pb.includes(t.item.name)) {
+              dep_pb.push(`${t.item.id}`)
+          }
+          if(t.item.name == "Practice Buffer") {
+              pb = t.item
+          }
+      })
+
+        if(pb) {
+            pb.depends_on = dep_pb.join(",")
+        }
+
+
+      const rows = []
+        json.task.forEach(t => {
+            let predecessorDisplay = null;
+
+            // Calculates duration of each item dependent on number of songs
+            var duration = t.item.duration
+            if(json.num_songs > t.item.song_per_duration) {
+                let k = Math.floor(json.num_songs / t.item.song_per_duration)
+                if(k == 1) {
+                    k = 2;
+                }
+                duration *= k;
+            }
+            // Creates rows for items in chart
+            rows.push([ `${t.item.id}`, t.item.name, null, null, null, daysToMilliseconds(duration),
+                t.complete ? 100 : 0,
+                t.item.depends_on ? `${t.item.depends_on}` : null ])
+        })
+
+      otherData.addRows(rows)
+
+        chartTable = otherData;
 
       var options = {
-        height: 275,
+        height: 1200,
         gantt: {
-          defaultStartDateMillis: new Date(2015, 3, 28)
+          defaultStartDateMillis: projectStartDate
         }
       };
 
       var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
 
       chart.draw(otherData, options);
+
+      // Detects click on item
+      function selectHandler(){
+            var selections = chart.getSelection();
+
+            if (selections.length == 0)
+                {
+                    selection = null;
+                }
+            else
+                {
+                    selection =  selections[0];
+
+                    // Shows mark complete pop up on click
+                    $("#confirm").modal('show')
+                }
+        }
+
+      google.visualization.events.addListener(chart, 'select', selectHandler);
+
+    // Marks as complete
+      $("#complete").on("click", e=> {
+          console.info("HERE", selection);
+          var task_id = json.task[selection.row].id;
+          $("#confirm").modal('hide')
+          fetch("/api/projectItem/" + task_id + "/", {
+              method: "PUT",
+              headers: { 'Content-type': 'application/json'},
+              body: JSON.stringify({project: json.id,
+                  complete: true,
+                  id: json.task[selection.row].id})
+          }).then(resp => resp.json()
+          ).then(json => {console.log("COMPLETED")})
+          otherData.setCell(selection.row, 6, 100)
+          chart.draw(otherData, options);
+
+      })
+
+        // marks as incomplete
+        $("#undo").on("click", e=> {
+          console.info("HERE", selection);
+          var task_id = json.task[selection.row].id;
+          $("#confirm").modal('hide')
+          fetch("/api/projectItem/" + task_id + "/", {
+              method: "PUT",
+              headers: { 'Content-type': 'application/json'},
+              body: JSON.stringify({project: json.id,
+                  complete: false,
+                  id: json.task[selection.row].id})
+          }).then(resp => resp.json()
+          ).then(json => {console.log("COMPLETED")})
+            otherData.setCell(selection.row, 6, 0)
+            chart.draw(otherData, options);
+      })
+
     }
   </script>
-
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <body>
-      <div id="chart_div"></div>
+
+    <div class="container container-fluid">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h1>{{ project.name }}: {{ project.artist.artist_name }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 text-center">
+                <h3>Number of songs: {{ project.num_songs }}</h3>
+            </div>
+            <div class="col-sm-6 text-center">
+                <h3>Number of overdubs: {{ project.num_od }}</h3>
+            </div>
+        </div>
+    </div>
+
+      <div class="container-fluid" id="chart_div"></div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="confirm">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="complete" class="btn btn-primary">Mark Complete</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="undo">mark incomplete</button>
+          </div>
+        </div>
+      </div>
+    </div>
     </body>
 {%  endblock %}
 

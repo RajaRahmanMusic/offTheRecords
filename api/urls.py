@@ -15,8 +15,8 @@ router.register(r'youTube', views.YouTubeViewSet)
 router.register(r'soundCloud', views.SoundCloudViewSet)
 router.register(r'bandCamp', views.BandCampViewSet)
 router.register(r'spotifyForArtists', views.SpotifyForArtistsViewSet)
-router.register(r'item', views.ItemViewSet)
-router.register(r'project', views.ProjectViewSet)
+#router.register(r'item', views.ItemViewSet)
+router.register(r'project', views.ProjectViewSet, basename='project')
 router.register(r'projectItem', views.ProjectItemViewSet)
 
 urlpatterns = [

@@ -1,25 +1,6 @@
 from rest_framework import serializers
 from offTheRecords import models
 
-
-class ItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Item
-        fields = '__all__'
-
-
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Project
-        fields = '__all__'
-
-
-class ProjectItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ProjectItem
-        fields = '__all__'
-
-
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Genre
@@ -121,3 +102,36 @@ class ArtistWritableSerializer(serializers.ModelSerializer):
                   'bmi', 'soundExchange', 'mlc', 'spotifyForArtists',
                   'songTrust', 'googleDrive', 'venmo', 'payPal',
                   'cashapp', 'soundCloud', 'bandCamp', 'id']
+
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Item
+        fields = '__all__'
+
+
+class ProjectItemSerializer(serializers.ModelSerializer):
+    item = ItemSerializer(read_only=True, required=False)
+
+    class Meta:
+        model = models.ProjectItem
+        fields = '__all__'
+
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    task = ProjectItemSerializer(many=True, read_only=True, source='projectitem_set')
+    artist = ArtistSerializer(read_only=True)
+
+    class Meta:
+        model = models.Project
+        fields = '__all__'
+
+class ProjectWritableSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    start_date = serializers.DateField()
+    num_od = serializers.IntegerField()
+    type = serializers.IntegerField()
+    num_songs = serializers.IntegerField()
+    artist = serializers.IntegerField()
+    others = serializers.DictField()

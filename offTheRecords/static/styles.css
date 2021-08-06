@@ -1,0 +1,31 @@
+body{
+    background-color: #fff;
+    font-family: "Courier New", Courier, monospace;
+    font-weight: bolder;
+}
+
+.vis-text{
+    color: #fadb7d;
+}
+
+.dark-btn{
+    background-color: #36416b;
+    border-color: transparent;
+}
+
+.card{
+    background-color: #fadb7d;
+}
+
+
+.logo{
+    background-color: #ffdb7d;
+}
+
+.vert-align{
+    margin-top: 7.5%;
+    margin-bottom: -50%;
+    margin-left: 25%;
+    margin-right: 25%;
+
+}

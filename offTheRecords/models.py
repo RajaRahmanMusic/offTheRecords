@@ -1,8 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-"""FIX RELATED NAMES OF CLASSES FOR ADMIN"""
-
 
 class User(AbstractUser):
     MANAGER = 1
@@ -164,19 +162,25 @@ class Item(models.Model):
 
 
 class Project(models.Model):
+    ITB = 0
+    STUDIO = 1
+    CHOICES = ((ITB, "In The Box"), (STUDIO, "Studio"))
     artist = models.ForeignKey(Artist, on_delete=models.PROTECT)
     name = models.CharField(max_length=128)
     start_date = models.DateField(blank=True, null=True)
     num_songs = models.IntegerField(default=1)
     num_od = models.IntegerField(default=1)
-    task = models.ManyToManyField(to=Item, through ='ProjectItem')
+    project_type = models.IntegerField(default=1, choices=CHOICES)
+    task = models.ManyToManyField(to=Item, through='ProjectItem')
 
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = ['artist', 'name']
 
 class ProjectItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.PROTECT)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
-
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    complete = models.BooleanField(default=False)
 

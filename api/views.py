@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from rest_framework import viewsets, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
@@ -17,6 +18,7 @@ class GenreViewSet(viewsets.ModelViewSet):
 
 
 class ArtistViewSet(viewsets.ModelViewSet):
+    """ All functions override to make writable"""
     # serializer_class = serializers.ArtistSerializer
     authentication_classes = (CsrfExcept,)
 
@@ -119,12 +121,56 @@ class ItemViewSet(viewsets.ModelViewSet):
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
-    queryset = models.Project.objects.all()
+    # queryset = models.Project.objects.all()
     serializer_class = serializers.ProjectSerializer
     authentication_classes = (CsrfExcept, )
 
+    def create(self, request, *args, **kwargs):
+        options = ["Pitching", "Long Form Video Content",
+                   "Short Form Video Content", "EPK", "Visualizers"]
+        studio = ["Rehearsal", "Rehearsal Buffer", "Studio Session", "Session Buffer"]
+
+        serializer = serializers.ProjectWritableSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            project = models.Project.objects.create(artist_id = serializer.data['artist'],
+                                   name = serializer.data['name'],
+                                   start_date = serializer.data['start_date'],
+                                   num_od=serializer.data['num_od'],
+                                   project_type=serializer.data['type'],
+                                   num_songs=serializer.data['num_songs'])
+        except IntegrityError:
+            return Response({"status": "duplicate name for this artist"})
+
+        for item in models.Item.objects.all():
+            if item.name in options:
+                if item.name in serializer.data['others'].keys():
+                    if serializer.data['others'][item.name]:
+                        project.task.add(item)
+
+            else:
+                if project.num_od == 0:
+                    if item.name in ["Overdubs", "Practice Buffer"]:
+                        continue
+
+                if project.project_type == models.Project.STUDIO:
+                    if item.name != "In the Box":
+                        project.task.add(item)
+
+                else:
+                    if item.name not in studio:
+                        project.task.add(item)
+
+        return Response({"status": "ok",
+                         "id": project.id}, status=status.HTTP_201_CREATED)
+
+
+    def get_queryset(self):
+        artists = models.Artist.objects.filter(manager=self.request.user)
+        return models.Project.objects.filter(artist__in=artists)
 
 class ProjectItemViewSet(viewsets.ModelViewSet):
     queryset = models.ProjectItem.objects.all()
     serializer_class = serializers.ProjectItemSerializer
     authentication_classes = (CsrfExcept, )
+

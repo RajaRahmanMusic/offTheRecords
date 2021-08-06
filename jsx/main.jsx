@@ -19,7 +19,7 @@ class Manager extends React.Component {
         console.log(link)
         window.location.href = "/artist/" + link;
     }
-
+    // renders html for list of artists under a manager
     render() {
         return (
             <div>

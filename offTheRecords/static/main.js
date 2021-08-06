@@ -40,6 +40,8 @@ var Manager = function (_React$Component) {
             console.log(link);
             window.location.href = "/artist/" + link;
         }
+        // renders html for list of artists under a manager
+
     }, {
         key: "render",
         value: function render() {

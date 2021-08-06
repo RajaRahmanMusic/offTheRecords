@@ -1,13 +1,10 @@
-{/* TODO MAKE DATE FIELD MORE USER FRIENDLY */}
-
-
-
 class ArtistView extends React.Component {
     constructor(props) {
         super(props);
         this.state = { edit: ""}
     }
 
+    // Function displays foreign key elements from artist
     displayForeign(name, title, link){
         console.log(name, title, link)
         if (this.props.artist[name]) {
@@ -38,7 +35,7 @@ class ArtistView extends React.Component {
                 )
         }
     }
-
+    // Displays extra info
     secondaryItems() {
         if(  this.props.create === false) {
             return (
@@ -223,6 +220,7 @@ class ArtistView extends React.Component {
         }
     }
 
+    // Renders html
     render() {
 
         return(
@@ -304,7 +302,7 @@ class ArtistView extends React.Component {
 
 
 
-
+// Edits and updates artist info
 class EditForm extends React.Component {
     constructor(props) {
         super(props);
@@ -625,6 +623,8 @@ class EditForm extends React.Component {
     }
 }
 
+
+// Updates artist info
 class Artist extends React.Component {
     constructor(props) {
         super(props)

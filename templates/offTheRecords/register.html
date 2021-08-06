@@ -2,35 +2,36 @@
 
 {% block body %}
 
-    <h2>Register</h2>
 
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
 
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-        </div>
-        <div class="form-group">
-            <select name="role">
-                <option value="1">Manager</option>
-                <option value="2">Artist</option>
-            </select>
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
-    </form>
+    <div class="row">
+        <div class="text-center col-sm-12 auto-align">
+            {% if message %}
+                <div>{{ message }}</div>
+            {% endif %}
 
-    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+            <form class="form-signin vert-align" action="{% url 'register' %}" method="post">
+                {% csrf_token %}
+                <div class="jumbotron logo">
+                    <h1>Off the Records</h1>
+                </div>
+                <div class="form-group">
+                <h1 class="h3 mb-3 font-weight-normal card">Please Register</h1>
+
+                    <input class="form-control card" autofocus type="text" name="username" placeholder="Username">
+                    <input class="form-control card" type="email" name="email" placeholder="Email Address">
+                    <input class="form-control card" type="password" name="password" placeholder="Password">
+                    <input class="form-control card" type="password" name="confirmation" placeholder="Confirm Password">
+                    <select class="custom-select card" name="role">
+                        <option selected>--Please Select Role--</option>
+                        <option value="1">Manager</option>
+                        <option value="2">Artist</option>
+                    </select>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block dark-btn" type="submit" value="Register">Register</button>
+                <p class="mt-5 mb-3 text-muted">Already have an account? <a href="{% url 'login' %}">Log In here.</a></p>
+            </form>
+        </div>
+    </div>
 
 {% endblock %}

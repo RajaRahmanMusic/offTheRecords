@@ -2,6 +2,12 @@ from django.contrib import admin
 from offTheRecords import models
 # Register your models here.
 
+"""
+ADMIN EMAIL is admin@admin.com
+ADMIN USERNAME is admin
+ADMIN PASSWORD is admin
+"""
+
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'email', 'role']
@@ -62,7 +68,7 @@ class SpotifyForArtistsAdmin(admin.ModelAdmin):
     list_display = ['username', 'followers', 'monthly_listeners']
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ['name', 'depends_on', 'duration', 'song_per_duration']
+    list_display = ['name', 'depends_on', 'duration', 'song_per_duration', 'id']
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ['name', 'artist', 'start_date', 'num_songs', 'num_od']

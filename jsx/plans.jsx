@@ -18,7 +18,7 @@ class Project extends React.Component {
         console.log(link)
         window.location.href = "/project_plan/" + link;
     }
-
+    // similar to main.jsx
     render() {
         return (
             <div>
@@ -35,7 +35,7 @@ class Project extends React.Component {
                     this.state.projects.map( (project, n) => {
                         return (<tr  onClick={ e => this.clicked(e, n)} key={project.id}>
                             <td>{ project.name }</td>
-                            <td>{ project.artist}</td>
+                            <td>{ project.artist.artist_name}</td>
                             <td>{ project.start_date}</td>
                         </tr>)
                     })
